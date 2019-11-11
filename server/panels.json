@@ -1,0 +1,89 @@
+// 20191110202937
+// http://10.118.87.104/production.json
+
+{
+  "production": [
+    {
+      "type": "inverters",
+      "activeCount": 15,
+      "readingTime": 0,
+      "wNow": 0,
+      "whLifetime": 807017
+    },
+    {
+      "type": "eim",
+      "activeCount": 1,
+      "measurementType": "production",
+      "readingTime": 1573439444,
+      "wNow": 0.0,
+      "whLifetime": 795612.303,
+      "varhLeadLifetime": 0.0,
+      "varhLagLifetime": 314730.044,
+      "vahLifetime": 1002539.761,
+      "rmsCurrent": 2.469,
+      "rmsVoltage": 245.464,
+      "reactPwr": 299.101,
+      "apprntPwr": 303.349,
+      "pwrFactor": 0.0,
+      "whToday": 22211.303,
+      "whLastSevenDays": 98363.303,
+      "vahToday": 25839.761,
+      "varhLeadToday": 0.0,
+      "varhLagToday": 6375.044
+    }
+  ],
+  "consumption": [
+    {
+      "type": "eim",
+      "activeCount": 0,
+      "measurementType": "total-consumption",
+      "readingTime": 1573439444,
+      "wNow": 0.0,
+      "whLifetime": 795612.303,
+      "varhLeadLifetime": 0.0,
+      "varhLagLifetime": 314730.044,
+      "vahLifetime": 0.0,
+      "rmsCurrent": 2.737,
+      "rmsVoltage": 245.442,
+      "reactPwr": -299.101,
+      "apprntPwr": 671.886,
+      "pwrFactor": 0.0,
+      "whToday": 795612.303,
+      "whLastSevenDays": 795612.303,
+      "vahToday": 0.0,
+      "varhLeadToday": 0.0,
+      "varhLagToday": 314730.044
+    },
+    {
+      "type": "eim",
+      "activeCount": 0,
+      "measurementType": "net-consumption",
+      "readingTime": 1573439444,
+      "wNow": 0.0,
+      "whLifetime": 0.0,
+      "varhLeadLifetime": 0.0,
+      "varhLagLifetime": 0.0,
+      "vahLifetime": 0.0,
+      "rmsCurrent": 0.269,
+      "rmsVoltage": 245.42,
+      "reactPwr": -0.0,
+      "apprntPwr": 32.929,
+      "pwrFactor": 0.0,
+      "whToday": 0,
+      "whLastSevenDays": 0,
+      "vahToday": 0,
+      "varhLeadToday": 0,
+      "varhLagToday": 0
+    }
+  ],
+  "storage": [
+    {
+      "type": "acb",
+      "activeCount": 0,
+      "readingTime": 0,
+      "wNow": 0,
+      "whNow": 0,
+      "state": "idle"
+    }
+  ]
+}
