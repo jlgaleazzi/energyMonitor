@@ -9,7 +9,7 @@ class App extends Component {
     }
     componentDidMount() {
         // connect to socket server
-        let socket = new WebSocket('ws://127.0.0.1:54321/');
+        let socket = new WebSocket('ws://10.118.87.125:80/');
         socket.addEventListener('open',((e) => {
             socket.send('hello');
         }))

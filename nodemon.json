@@ -1,0 +1,3 @@
+{
+    "ignore": ["jsonfile.json", "readings/*", "history.json"]
+  }

@@ -23,13 +23,30 @@ wss.on('connection', (ws) => {
 
 setInterval(()=> {
     getData();
-},10000)
+},60000)
 
 const getData = ((cb) =>{
     axios.get('http://10.118.87.104/production.json')
     .then((response)=>{
         console.log('gotData from server');
         data = response.data;
+        emitter.emit('newData',data);
+        var time = data.production[1].readingTime;
+        var d = new Date(0);
+        d.setUTCSeconds(time);
+        let day = d.getDate();
+        let month = d.getMonth();
+        let year = d.getFullYear();
+        let filename = `${year}_${month}_${day}`;
+        console.log('fileName '+filename)
+        let path = Path.resolve(__dirname,`readings/${filename}.json`)
+        console.log('path:'+path);
+        fs.appendFile(path,`${JSON.stringify(data)}\n`, (err) => {
+            if (err) {
+                console.log('Error appending file '+err)
+            }
+        })
+
     })
     .catch((err)=> {
         //console.log(err);
@@ -68,15 +85,44 @@ const server = net.createServer((client) =>{
     client.on('data', (data) => {
         console.log('Receive data\n');
         let xml = data;
-        let path = Path.resolve(__dirname,'jsonfile.json')
+      
         xmltojs.parseString(xml,(err,res) => {
-            fs.writeFile(path, JSON.stringify(res),(err) => {
-                if (err) {
-                    console.log('error writing file')
-                } else {
-                    console.log(JSON.stringify(res));
+            if (err) {
+                console.log('error parsing data')
+            } else
+            {
+                emitter.emit('newData',res )
+                let path = Path.resolve(__dirname,'readings/consumption.json')
+                if (res.msg.hasOwnProperty('hist')) {
+                    // save or append to file 
+                    console.log('saving history file');
+                    let histPath = Path.resolve(__dirname,'readings/history.json')
+                    fs.appendFile(histPath,`${JSON.stringify(res)}\n`, (err) => {
+                        if (err) {
+                            console.log('Error appending file '+err)
+                            }   
+                         })
+                 } else {
+                    
+                    fs.writeFile(path, JSON.stringify(res),(err) => {
+                        if (err) {
+                            console.log('error writing file '+err)
+                        } else {
+                            console.log('send newData')
+                        
+                        }
+                    })
                 }
-            } )
+            }
+            
+            // fs.writeFile(path, JSON.stringify(res),(err) => {
+            //     if (err) {
+            //         console.log('error writing file')
+            //     } else {
+            //         console.log('send newData')
+                
+            //     }
+            // } )
         } )
     })
 
