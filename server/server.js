@@ -9,14 +9,13 @@ const xmltojs = require('xml2js');
 const axios = require('axios');
 const WebSocket = require('ws');
 const events = require('events');
-const wss = new WebSocket.Server({host:'127.0.0.1',port:54321});
+const wss = new WebSocket.Server({port:54321});
 
 const emitter = new events.EventEmitter();
 
 wss.on('connection', (ws) => { 
 
   emitter.on('newData', (data) => {
-    
      ws.send(JSON.stringify(data));
     })
     
