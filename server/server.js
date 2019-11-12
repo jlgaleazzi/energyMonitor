@@ -6,12 +6,59 @@ const net = require('net');
 const fs = require('fs')
 const Path = require('path');
 const xmltojs = require('xml2js');
+const axios = require('axios');
+const WebSocket = require('ws');
+const wss = new WebSocket.Server({host:'127.0.0.1',port:54321});
+
+wss.on('open', (ws) => {
+   console.log('connected')
+   ws.send('connected')
+    
+})
+
+setTimeout(()=> {
+    getData();
+},60000)
+
+const getData = ((cb) =>{
+    axios.get('http://10.118.87.104/production.json')
+    .then((response)=>{
+        console.log('gotData from server');
+        data = response.data;
+    })
+    .catch((err)=> {
+        //console.log(err);
+         simulateData((err,result) => {
+             data = JSON.parse(result);
+             let wnow =  Number(Math.random() * 2).toFixed(2) ;
+             data.production[1].wNow = wnow;
+         });
+    })
+    
+   
+})
+
+getData();
+
+const simulateData = (cb) => {
+    var path = Path.resolve(__dirname,'panels.json');
+    fs.readFile(path,(err,file) => {
+        if (err) {
+            console.log('error reading File')
+            cb(err,null);
+        } else {
+            //console.log('file' +file);
+            cb(null,file);
+        }
+    })
+};
+
+
 
 const server = net.createServer((client) =>{
     console.log(`client connected , Client local address : ${client.localAddress}: `);
     client.setEncoding('utf-8');
     client.setTimeout(60000);
-
     client.on('data', (data) => {
         console.log('Receive data\n');
         let xml = data;
@@ -24,12 +71,7 @@ const server = net.createServer((client) =>{
                     console.log(JSON.stringify(res));
                 }
             } )
-            
         } )
-      
-        // write to file
-        
-
     })
 
     client.on('end', () => {
