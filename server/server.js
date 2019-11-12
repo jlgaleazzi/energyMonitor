@@ -20,10 +20,11 @@ wss.on('connection', (ws) => {
     })
     
 })
+let fakeData = [];
 
 setInterval(()=> {
     getData();
-},60000)
+},10000)
 
 const getData = ((cb) =>{
     axios.get('http://10.118.87.104/production.json')
@@ -49,31 +50,47 @@ const getData = ((cb) =>{
 
     })
     .catch((err)=> {
-        //console.log(err);
+        console.log('nodata');
          simulateData((err,result) => {
-             data = JSON.parse(result);
-             let wnow =  Number(Math.random() * 2).toFixed(2) ;
-             data.production[1].wNow = wnow;
-             emitter.emit('newData',data);
+                //console.log(JSON.stringify(result));
+                emitter.emit('newData',result);
+             })
          });
-    })
-    
+    })    
    
-})
+
 
 getData();
+let dataCounter = 430;
+const getOldData = () => {
+    console.log('dataCounter '+dataCounter);
+    if (dataCounter > fakeData.length -1) {
+        dataCounter = 400;
+    }
+    return fakeData[dataCounter++];
+    
+}
 
 const simulateData = (cb) => {
-    var path = Path.resolve(__dirname,'panels.json');
-    fs.readFile(path,(err,file) => {
-        if (err) {
-            console.log('error reading File')
-            cb(err,null);
-        } else {
-            //console.log('file' +file);
-            cb(null,file);
-        }
-    })
+    if (fakeData.length === 0) {
+        var path = Path.resolve(__dirname,'readings/2019_10_12.json');
+        fs.readFile(path,(err,file) => {
+            if (err) {
+                console.log(err)
+                cb(err,null);
+            } else {
+                fakeData = JSON.parse(file);
+                console.log('fakeData length:' +fakeData.length);
+                //cb(null,file);
+                cb(null,getOldData());
+                
+            }
+        })
+       
+    } else  
+    {
+        cb(null,getOldData());
+    }
 };
 
 
