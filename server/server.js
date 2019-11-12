@@ -8,17 +8,23 @@ const Path = require('path');
 const xmltojs = require('xml2js');
 const axios = require('axios');
 const WebSocket = require('ws');
+const events = require('events');
 const wss = new WebSocket.Server({host:'127.0.0.1',port:54321});
 
-wss.on('open', (ws) => {
-   console.log('connected')
-   ws.send('connected')
+const emitter = new events.EventEmitter();
+
+wss.on('connection', (ws) => { 
+
+  emitter.on('newData', (data) => {
+    
+     ws.send(JSON.stringify(data));
+    })
     
 })
 
-setTimeout(()=> {
+setInterval(()=> {
     getData();
-},60000)
+},10000)
 
 const getData = ((cb) =>{
     axios.get('http://10.118.87.104/production.json')
@@ -32,6 +38,7 @@ const getData = ((cb) =>{
              data = JSON.parse(result);
              let wnow =  Number(Math.random() * 2).toFixed(2) ;
              data.production[1].wNow = wnow;
+             emitter.emit('newData',data);
          });
     })
     

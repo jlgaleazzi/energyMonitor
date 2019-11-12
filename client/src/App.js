@@ -14,6 +14,7 @@ class App extends Component {
             socket.send('hello');
         }))
         socket.addEventListener('message',((e) => {
+           console.log('receiving message'+e)
             console.log(e.data);
         }));
     }
@@ -21,7 +22,7 @@ class App extends Component {
     render(){
         return (
             <div className='App'>
-                <h1>My MVP sd App</h1>
+                <h1>My MVP App</h1>
             </div>
         )
     }
