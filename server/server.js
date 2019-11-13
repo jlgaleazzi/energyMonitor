@@ -9,22 +9,32 @@ const xmltojs = require('xml2js');
 const axios = require('axios');
 const WebSocket = require('ws');
 const events = require('events');
-const wss = new WebSocket.Server({host:'127.0.0.1',port:54321});
+const wss = new WebSocket.Server({port:54321});
+
+const pws = new WebSocket.Server({port:43210});
+
 
 const emitter = new events.EventEmitter();
+const pemitter = new events.EventEmitter();
+pws.on('connection', (ws) => {
+
+    pemitter.on('pdata', (data) => {
+        ws.send(JSON.stringify(data));
+    })
+})
 
 wss.on('connection', (ws) => { 
 
   emitter.on('newData', (data) => {
-    
      ws.send(JSON.stringify(data));
     })
     
 })
+let fakeData = [];
 
 setInterval(()=> {
     getData();
-},60000)
+},10000)
 
 const getData = ((cb) =>{
     axios.get('http://10.118.87.104/production.json')
@@ -41,7 +51,7 @@ const getData = ((cb) =>{
         let filename = `${year}_${month}_${day}`;
         console.log('fileName '+filename)
         let path = Path.resolve(__dirname,`readings/${filename}.json`)
-        console.log('path:'+path);
+        pemitter.emit('pdata',getFakeProdData());
         fs.appendFile(path,`${JSON.stringify(data)}\n`, (err) => {
             if (err) {
                 console.log('Error appending file '+err)
@@ -50,31 +60,51 @@ const getData = ((cb) =>{
 
     })
     .catch((err)=> {
-        //console.log(err);
+        console.log('nodata');
          simulateData((err,result) => {
-             data = JSON.parse(result);
-             let wnow =  Number(Math.random() * 2).toFixed(2) ;
-             data.production[1].wNow = wnow;
-             emitter.emit('newData',data);
+                //console.log(JSON.stringify(result));
+                pemitter.emit('pdata',getFakeProdData());
+                emitter.emit('newData',result);
+             })
          });
-    })
-    
+    })    
    
-})
+const getFakeProdData  =() => {
+    let msg = {watts: Math.floor(Math.random() * 14500)/1000 }
+    return msg;
+}
 
 getData();
+let dataCounter = 430;
+const getOldData = () => {
+    console.log('dataCounter '+dataCounter);
+    if (dataCounter > fakeData.length -1) {
+        dataCounter = 430;
+    }
+    return fakeData[dataCounter++];
+    
+}
 
 const simulateData = (cb) => {
-    var path = Path.resolve(__dirname,'panels.json');
-    fs.readFile(path,(err,file) => {
-        if (err) {
-            console.log('error reading File')
-            cb(err,null);
-        } else {
-            //console.log('file' +file);
-            cb(null,file);
-        }
-    })
+    if (fakeData.length === 0) {
+        var path = Path.resolve(__dirname,'readings/2019_10_12.json');
+        fs.readFile(path,(err,file) => {
+            if (err) {
+                console.log(err)
+                cb(err,null);
+            } else {
+                fakeData = JSON.parse(file);
+                console.log('fakeData length:' +fakeData.length);
+                //cb(null,file);
+                cb(null,getOldData());
+                
+            }
+        })
+       
+    } else  
+    {
+        cb(null,getOldData());
+    }
 };
 
 
