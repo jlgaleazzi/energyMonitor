@@ -11,7 +11,17 @@ const WebSocket = require('ws');
 const events = require('events');
 const wss = new WebSocket.Server({port:54321});
 
+const pws = new WebSocket.Server({port:43210});
+
+
 const emitter = new events.EventEmitter();
+const pemitter = new events.EventEmitter();
+pws.on('connection', (ws) => {
+
+    pemitter.on('pdata', (data) => {
+        ws.send(JSON.stringify(data));
+    })
+})
 
 wss.on('connection', (ws) => { 
 
@@ -41,7 +51,7 @@ const getData = ((cb) =>{
         let filename = `${year}_${month}_${day}`;
         console.log('fileName '+filename)
         let path = Path.resolve(__dirname,`readings/${filename}.json`)
-        console.log('path:'+path);
+        pemitter.emit('pdata',getFakeProdData());
         fs.appendFile(path,`${JSON.stringify(data)}\n`, (err) => {
             if (err) {
                 console.log('Error appending file '+err)
@@ -53,12 +63,16 @@ const getData = ((cb) =>{
         console.log('nodata');
          simulateData((err,result) => {
                 //console.log(JSON.stringify(result));
+                pemitter.emit('pdata',getFakeProdData());
                 emitter.emit('newData',result);
              })
          });
     })    
    
-
+const getFakeProdData  =() => {
+    let msg = {watts: Math.floor(Math.random() * 14500)/1000 }
+    return msg;
+}
 
 getData();
 let dataCounter = 430;

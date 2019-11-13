@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import Gauge from './gauge';
+import Gauge from './Gauge';
 class ProducingPanel extends Component {
     constructor(props) {
         super(props);
@@ -17,10 +17,10 @@ class ProducingPanel extends Component {
         // connect to socket server
         let socket = new WebSocket('ws://127.0.0.1:54321/');
         socket.addEventListener('open',((e) => {
-            socket.send('hello');
+            socket.send('ProducePanel Connected');
         }))
         socket.addEventListener('message',((e) => {
-           //console.log('receiving message'+e)
+           console.log('receiving message'+e)
           let data = JSON.parse(e.data);
             let uDate = data.production[1].readingTime;
             let d = new Date(0);

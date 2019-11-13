@@ -5,7 +5,10 @@ class Gauge extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            data:[0, 3.7]
+            data:[0, 3.7],
+            backgroundColor:[ 'rgb(250,222,50)',
+            'rgb(46,46,50)',
+            'rgba(255,205,86,0)']
         }
     }
     componentDidMount() {
@@ -38,11 +41,7 @@ class Gauge extends Component {
                 labels: ['Now','Peak'],
                 datasets: [{
                     data: this.props.energyNow,
-                    backgroundColor: [
-                        'rgb(250,222,50)',
-                        'rgb(46,46,50)',
-                        'rgba(255,205,86,0)'
-                    ]
+                    backgroundColor: this.state.backgroundColor
                 }]
             },
             options: {
