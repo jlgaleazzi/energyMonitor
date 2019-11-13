@@ -6,3 +6,7 @@
 .wattsNow {
   font-size: 3rem;
 }
+
+.gauge {
+  width:640px;
+}

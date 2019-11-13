@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-
+import Gauge from './gauge';
 class ProducingPanel extends Component {
     constructor(props) {
         super(props);
@@ -9,6 +9,7 @@ class ProducingPanel extends Component {
             date:new Date().toDateString(),
             whToday:0,
             whLastSevenDays:0,
+            energyNow:[0,3.7]
 
         }
     }
@@ -30,7 +31,8 @@ class ProducingPanel extends Component {
                 wNow:kwatts,
                 time:time,
                 whToday: data.production[1].whToday,
-                whLastSevenDays: data.production[1].whLastSevenDays
+                whLastSevenDays: data.production[1].whLastSevenDays,
+                energyNow:[kwatts,3.7]
 
             })
         }));
@@ -39,6 +41,7 @@ class ProducingPanel extends Component {
         return <div>
                 <h1>Solar Output</h1>
                 <div>{this.state.date}</div>
+                <Gauge energyNow={this.state.energyNow}/>
                 <div className='wattsNow'>{this.state.wNow} Kw</div>
                 <div>{this.state.whToday}</div>
                 <div>{this.state.whLastSevenDays}</div>

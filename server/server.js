@@ -65,7 +65,7 @@ let dataCounter = 430;
 const getOldData = () => {
     console.log('dataCounter '+dataCounter);
     if (dataCounter > fakeData.length -1) {
-        dataCounter = 400;
+        dataCounter = 430;
     }
     return fakeData[dataCounter++];
     
