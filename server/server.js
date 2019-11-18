@@ -1,36 +1,67 @@
 // node js server for energymon 
-const express = require('express');
-const app = express();
-const port = '3002';
-const net = require('net');
 const fs = require('fs')
 const Path = require('path');
 const xmltojs = require('xml2js');
 const axios = require('axios');
-const WebSocket = require('ws');
+const WebSocketServer = require('ws').Server;
 const events = require('events');
-const wss = new WebSocket.Server({port:54321});
+const http = require('http');
+const url = require('url');
+const server = http.createServer();
 
-const pws = new WebSocket.Server({port:43210});
+const solar = new WebSocketServer({noServer:true});
+const cc = new WebSocketServer({noServer:true});
+const ccin = new WebSocketServer({noServer:true});
+
+server.on('upgrade', (request,socket,head) => {
+    const pathname = url.parse(request.url).pathname;
+
+    switch(pathname) {
+        case '/solar':
+            solar.handleUpgrade(request,socket, head, (ws) => {
+            solar.emit('connection', ws, request);
+            })
+        break;
+        case '/ccou':
+            cc.handleUpgrade(request,socket,head,(ws) => {
+                cc.emit('connection',ws, request)
+            })
+        break;
+        case '/ccin':
+            ccin.handleUpgrade(request,socket,head,(ws) => {
+                ccin.emit('connection',ws,request);
+            })
+
+        default:
+            socket.destroy();
+    }
+
+});
 
 
 const emitter = new events.EventEmitter();
 const pemitter = new events.EventEmitter();
-pws.on('connection', (ws) => {
+// pws.on('connection', (ws) => {
 
-    pemitter.on('pdata', (data) => {
-        ws.send(JSON.stringify(data));
-    })
-})
+//     pemitter.on('pdata', (data) => {
+//         ws.send(JSON.stringify(data));
+//     })
+// })
 
-wss.on('connection', (ws) => { 
-
+solar.on('connection', (ws) => { 
   emitter.on('newData', (data) => {
      ws.send(JSON.stringify(data));
-    })
-    
+    }) 
 })
-let fakeData = [];
+
+ccin.on('connection', (ws) => {
+    ws.on('data',(data) => {
+        console.log('Received data from current cost:\n');
+        console.log(data);
+    })
+})
+
+
 
 setInterval(()=> {
     getData();
@@ -39,7 +70,7 @@ setInterval(()=> {
 const getData = ((cb) =>{
     axios.get('http://10.118.87.104/production.json')
     .then((response)=>{
-        console.log('gotData from server');
+        console.log('gotData from solar server');
         data = response.data;
         emitter.emit('newData',data);
         var time = data.production[1].readingTime;
@@ -49,9 +80,7 @@ const getData = ((cb) =>{
         let month = d.getMonth();
         let year = d.getFullYear();
         let filename = `${year}_${month}_${day}`;
-        console.log('fileName '+filename)
         let path = Path.resolve(__dirname,`readings/${filename}.json`)
-        pemitter.emit('pdata',getFakeProdData());
         fs.appendFile(path,`${JSON.stringify(data)}\n`, (err) => {
             if (err) {
                 console.log('Error appending file '+err)
@@ -61,90 +90,88 @@ const getData = ((cb) =>{
     })
     .catch((err)=> {
         console.log('nodata');
-         simulateData((err,result) => {
-                //console.log(JSON.stringify(result));
-                pemitter.emit('pdata',getFakeProdData());
-                emitter.emit('newData',result);
-             })
          });
     })    
    
-const getFakeProdData  =() => {
-    let msg = {watts: Math.floor(Math.random() * 14500)/1000 }
-    return msg;
-}
+    getData();
 
-getData();
-let dataCounter = 430;
-const getOldData = () => {
-    console.log('dataCounter '+dataCounter);
-    if (dataCounter > fakeData.length -1) {
-        dataCounter = 430;
-    }
-    return fakeData[dataCounter++];
+    server.listen(80);
+// const getFakeProdData  =() => {
+//     let msg = {watts: Math.floor(Math.random() * 14500)/1000 }
+//     return msg;
+// }
+
+// 
+// let dataCounter = 430;
+// const getOldData = () => {
+//     console.log('dataCounter '+dataCounter);
+//     if (dataCounter > fakeData.length -1) {
+//         dataCounter = 430;
+//     }
+//     return fakeData[dataCounter++];
     
-}
+// }
 
-const simulateData = (cb) => {
-    if (fakeData.length === 0) {
-        var path = Path.resolve(__dirname,'readings/2019_10_12.json');
-        fs.readFile(path,(err,file) => {
-            if (err) {
-                console.log(err)
-                cb(err,null);
-            } else {
-                fakeData = JSON.parse(file);
-                console.log('fakeData length:' +fakeData.length);
-                //cb(null,file);
-                cb(null,getOldData());
+// const simulateData = (cb) => {
+//     if (fakeData.length === 0) {
+//         var path = Path.resolve(__dirname,'readings/2019_10_12.json');
+//         fs.readFile(path,(err,file) => {
+//             if (err) {
+//                 console.log(err)
+//                 cb(err,null);
+//             } else {
+//                 fakeData = JSON.parse(file);
+//                 console.log('fakeData length:' +fakeData.length);
+//                 //cb(null,file);
+//                 cb(null,getOldData());
                 
-            }
-        })
+//             }
+//         })
        
-    } else  
-    {
-        cb(null,getOldData());
-    }
-};
+//     } else  
+//     {
+//         cb(null,getOldData());
+//     }
+// };
 
 
 
-const server = net.createServer((client) =>{
-    console.log(`client connected , Client local address : ${client.localAddress}: `);
-    client.setEncoding('utf-8');
-    client.setTimeout(60000);
-    client.on('data', (data) => {
-        console.log('Receive data\n');
-        let xml = data;
+// const server = net.createServer((client) =>{
+//     console.log(`client connected , Client local address : ${client.localAddress}: `);
+//     client.setEncoding('utf-8');
+//     client.setTimeout(60000);
+//     client.on('data', (data) => {
+//         console.log('Receive data\n');
+//         let xml = data;
       
-        xmltojs.parseString(xml,(err,res) => {
-            if (err) {
-                console.log('error parsing data')
-            } else
-            {
-                emitter.emit('newData',res )
-                let path = Path.resolve(__dirname,'readings/consumption.json')
-                if (res.msg.hasOwnProperty('hist')) {
-                    // save or append to file 
-                    console.log('saving history file');
-                    let histPath = Path.resolve(__dirname,'readings/history.json')
-                    fs.appendFile(histPath,`${JSON.stringify(res)}\n`, (err) => {
-                        if (err) {
-                            console.log('Error appending file '+err)
-                            }   
-                         })
-                 } else {
+//         xmltojs.parseString(xml,(err,res) => {
+//             if (err) {
+//                 console.log('error parsing data')
+//             } else
+//             {
+//                 emitter.emit('newData',res )
+//                 let path = Path.resolve(__dirname,'readings/consumption.json')
+//                 if (res.msg.hasOwnProperty('hist')) {
+//                     // save or append to file 
+//                     console.log('saving history file');
+//                     let histPath = Path.resolve(__dirname,'readings/history.json')
+//                     fs.appendFile(histPath,`${JSON.stringify(res)}\n`, (err) => {
+//                         if (err) {
+//                             console.log('Error appending file '+err)
+//                             }   
+//                          })
+//                  } else {
                     
-                    fs.writeFile(path, JSON.stringify(res),(err) => {
-                        if (err) {
-                            console.log('error writing file '+err)
-                        } else {
-                            console.log('send newData')
+//                     fs.writeFile(path, JSON.stringify(res),(err) => {
+//                         if (err) {
+//                             console.log('error writing file '+err)
+//                         } else {
+//                             console.log('send newData')
                         
-                        }
-                    })
-                }
-            }
+//                         }
+//                     })
+//                 }
+//             }
             
             // fs.writeFile(path, JSON.stringify(res),(err) => {
             //     if (err) {
@@ -154,37 +181,8 @@ const server = net.createServer((client) =>{
                 
             //     }
             // } )
-        } )
-    })
-
-    client.on('end', () => {
-        console.log('Client disconnected');
-        server.getConnections((err,count)=> {
-            if (!err) {
-                console.log(`there are ${count} connections now`);
-            } else
-            {
-                console.error(JSON.stringify(err));
-            }
-        });
-    });
-
-    client.on('timeout', () => {
-        console.log('client timed out');
-    })
-    
-})
-
-server.listen(65432, () => {
-    const serverInfo = server.address();
-    const serverInfoJson = JSON.stringify(serverInfo);
-    console.log("Socket Server listening on  "+serverInfoJson);
-    server.on('close', () => {
-        console.log('Socket Server closed');
-    })
-    server.on('error', (err) => {
-        console.error(JSON.stringify(err));
-    })
+    //     } )
+    // })
 
 
-})
+

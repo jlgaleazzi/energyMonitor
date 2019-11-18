@@ -13,7 +13,7 @@ class ConsumePanel extends Component {
     componentDidMount() {
         // connect to socket ser
       
-        let socket = new WebSocket('ws://127.0.0.1:43210/');
+        let socket = new WebSocket('ws://127.0.0.1:80/solar');
         socket.addEventListener('open',((e) => {
             console.log('consume Panel Connected');
             socket.send("consumePanel Connected");
