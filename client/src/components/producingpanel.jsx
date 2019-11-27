@@ -15,7 +15,7 @@ class ProducingPanel extends Component {
     }
     componentDidMount() {
         // connect to socket server
-        let socket = new WebSocket('ws://127.0.0.1:54321/');
+        let socket = new WebSocket('ws://127.0.0.1:80/ccout');
         socket.addEventListener('open',((e) => {
             socket.send('ProducePanel Connected');
         }))
@@ -46,7 +46,7 @@ class ProducingPanel extends Component {
                 <div>{this.state.whToday}</div>
                 <div>{this.state.whLastSevenDays}</div>
                 <div>{this.state.time}</div>
-               
+
            </div>
     }
 

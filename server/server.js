@@ -1,4 +1,4 @@
-// node js server for energymon 
+// node js server for energymon
 const fs = require('fs')
 const Path = require('path');
 const xmltojs = require('xml2js');
@@ -15,14 +15,14 @@ const ccin = new WebSocketServer({noServer:true});
 
 server.on('upgrade', (request,socket,head) => {
     const pathname = url.parse(request.url).pathname;
-
+    console.log(JSON.stringify(request));
     switch(pathname) {
         case '/solar':
             solar.handleUpgrade(request,socket, head, (ws) => {
             solar.emit('connection', ws, request);
             })
         break;
-        case '/ccou':
+        case '/ccout':
             cc.handleUpgrade(request,socket,head,(ws) => {
                 cc.emit('connection',ws, request)
             })
@@ -39,6 +39,16 @@ server.on('upgrade', (request,socket,head) => {
 });
 
 
+
+server.on('request', (request,response) => {
+    console.log('request-->'+request);
+    response.writeHead(200, {
+        'Content-Type': 'text/html',
+        'X-Powered-By': 'bacon'
+    })
+    response.end('<html><body><h1>Hello, From my Server!</h1></body></html>');
+})
+
 const emitter = new events.EventEmitter();
 const pemitter = new events.EventEmitter();
 // pws.on('connection', (ws) => {
@@ -48,20 +58,25 @@ const pemitter = new events.EventEmitter();
 //     })
 // })
 
-solar.on('connection', (ws) => { 
+solar.on('connection', (ws) => {
   emitter.on('newData', (data) => {
      ws.send(JSON.stringify(data));
-    }) 
-})
-
-ccin.on('connection', (ws) => {
-    ws.on('data',(data) => {
-        console.log('Received data from current cost:\n');
-        console.log(data);
     })
 })
 
+ccin.on('connection', (ws,request) => {
+    console.log('ccin connection ');
+    ws.addEventListener('onmessage', (msg)=> {
+        console.log('Received data from current cost:\n');
+        console.log(message);
+    })
+    ws.send('connected');
+})
 
+cc.on('connection', (ws) => {
+    ws.send('Hello');
+
+})
 
 setInterval(()=> {
     getData();
@@ -70,7 +85,6 @@ setInterval(()=> {
 const getData = ((cb) =>{
     axios.get('http://10.118.87.104/production.json')
     .then((response)=>{
-        console.log('gotData from solar server');
         data = response.data;
         emitter.emit('newData',data);
         var time = data.production[1].readingTime;
@@ -91,8 +105,8 @@ const getData = ((cb) =>{
     .catch((err)=> {
         console.log('nodata');
          });
-    })    
-   
+    })
+
     getData();
 
     server.listen(80);
@@ -101,7 +115,7 @@ const getData = ((cb) =>{
 //     return msg;
 // }
 
-// 
+//
 // let dataCounter = 430;
 // const getOldData = () => {
 //     console.log('dataCounter '+dataCounter);
@@ -109,7 +123,7 @@ const getData = ((cb) =>{
 //         dataCounter = 430;
 //     }
 //     return fakeData[dataCounter++];
-    
+
 // }
 
 // const simulateData = (cb) => {
@@ -124,11 +138,11 @@ const getData = ((cb) =>{
 //                 console.log('fakeData length:' +fakeData.length);
 //                 //cb(null,file);
 //                 cb(null,getOldData());
-                
+
 //             }
 //         })
-       
-//     } else  
+
+//     } else
 //     {
 //         cb(null,getOldData());
 //     }
@@ -143,7 +157,7 @@ const getData = ((cb) =>{
 //     client.on('data', (data) => {
 //         console.log('Receive data\n');
 //         let xml = data;
-      
+
 //         xmltojs.parseString(xml,(err,res) => {
 //             if (err) {
 //                 console.log('error parsing data')
@@ -152,33 +166,33 @@ const getData = ((cb) =>{
 //                 emitter.emit('newData',res )
 //                 let path = Path.resolve(__dirname,'readings/consumption.json')
 //                 if (res.msg.hasOwnProperty('hist')) {
-//                     // save or append to file 
+//                     // save or append to file
 //                     console.log('saving history file');
 //                     let histPath = Path.resolve(__dirname,'readings/history.json')
 //                     fs.appendFile(histPath,`${JSON.stringify(res)}\n`, (err) => {
 //                         if (err) {
 //                             console.log('Error appending file '+err)
-//                             }   
+//                             }
 //                          })
 //                  } else {
-                    
+
 //                     fs.writeFile(path, JSON.stringify(res),(err) => {
 //                         if (err) {
 //                             console.log('error writing file '+err)
 //                         } else {
 //                             console.log('send newData')
-                        
+
 //                         }
 //                     })
 //                 }
 //             }
-            
+
             // fs.writeFile(path, JSON.stringify(res),(err) => {
             //     if (err) {
             //         console.log('error writing file')
             //     } else {
             //         console.log('send newData')
-                
+
             //     }
             // } )
     //     } )
