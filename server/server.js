@@ -3,51 +3,67 @@ const fs = require('fs')
 const Path = require('path');
 const xmltojs = require('xml2js');
 const axios = require('axios');
-const WebSocketServer = require('ws').Server;
 const events = require('events');
-const http = require('http');
-const url = require('url');
-const server = http.createServer();
-
-const solar = new WebSocketServer({noServer:true});
-const cc = new WebSocketServer({noServer:true});
-const ccin = new WebSocketServer({noServer:true});
-
-server.on('upgrade', (request,socket,head) => {
-    const pathname = url.parse(request.url).pathname;
-    console.log(JSON.stringify(request));
-    switch(pathname) {
-        case '/solar':
-            solar.handleUpgrade(request,socket, head, (ws) => {
-            solar.emit('connection', ws, request);
-            })
-        break;
-        case '/ccout':
-            cc.handleUpgrade(request,socket,head,(ws) => {
-                cc.emit('connection',ws, request)
-            })
-        break;
-        case '/ccin':
-            ccin.handleUpgrade(request,socket,head,(ws) => {
-                ccin.emit('connection',ws,request);
-            })
-
-        default:
-            socket.destroy();
-    }
-
-});
+const express = require('express');
+const app = express();
+const port = 80;
+const ws = require('express-ws')(app);
 
 
 
-server.on('request', (request,response) => {
-    console.log('request-->'+request);
-    response.writeHead(200, {
-        'Content-Type': 'text/html',
-        'X-Powered-By': 'bacon'
+app.ws('/ccin', (ws,req) => {
+    ws.on('message',(msg) => {
+        console.log(msg);
+        ws.send('received payload')
     })
-    response.end('<html><body><h1>Hello, From my Server!</h1></body></html>');
 })
+
+app.use((req,res,next)=> {
+    console.log('middleware');
+    req.testing = 'testing';
+    return next();
+})
+
+app.get('/', (req,res,next) => {
+    console.log('get route', req.testing);
+    res.end();
+} )
+app.listen(port,() => console.log(`Express listening on port ${port}`));
+// server.on('upgrade', (request,socket,head) => {
+//     const pathname = url.parse(request.url).pathname;
+//     switch(pathname) {
+//         case '/solar':
+//             solar.handleUpgrade(request,socket, head, (ws) => {
+//             solar.emit('connection', ws, request);
+//             })
+//         break;
+//         case '/ccout':
+//             cc.handleUpgrade(request,socket,head,(ws) => {
+//                 console.log('request data '+request);
+//                 cc.emit('connection',ws, request)
+//             })
+//         break;
+//         case '/ccin':
+//             ccin.handleUpgrade(request,socket,head,(ws) => {
+//                 ccin.emit('connection',ws,request);
+//             })
+
+//         default:
+//             socket.destroy();
+//     }
+// });
+
+
+
+
+// server.on('request', (request,response) => {
+//     console.log('request-->'+request);
+//     response.writeHead(200, {
+//         'Content-Type': 'text/html',
+//         'X-Powered-By': 'bacon'
+//     })
+//     response.end('<html><body><h1>Hello, From my Server!</h1></body></html>');
+// })
 
 const emitter = new events.EventEmitter();
 const pemitter = new events.EventEmitter();
@@ -58,25 +74,25 @@ const pemitter = new events.EventEmitter();
 //     })
 // })
 
-solar.on('connection', (ws) => {
-  emitter.on('newData', (data) => {
-     ws.send(JSON.stringify(data));
-    })
-})
+// solar.on('connection', (ws) => {
+//   emitter.on('newData', (data) => {
+//      ws.send(JSON.stringify(data));
+//     })
+// })
 
-ccin.on('connection', (ws,request) => {
-    console.log('ccin connection ');
-    ws.addEventListener('onmessage', (msg)=> {
-        console.log('Received data from current cost:\n');
-        console.log(message);
-    })
-    ws.send('connected');
-})
+// ccin.on('connection', (ws,request) => {
+//     console.log('ccin connection ');
+//     ws.on('message', (msg)=> {
+//         console.log('Received data from current cost:\n');
+//         console.log(msg);
+//     })
+//     ws.send('connected');
+// })
 
-cc.on('connection', (ws) => {
-    ws.send('Hello');
+// cc.on('connection', (ws) => {
+//     ws.send('Hello');
 
-})
+// })
 
 setInterval(()=> {
     getData();
@@ -109,7 +125,7 @@ const getData = ((cb) =>{
 
     getData();
 
-    server.listen(80);
+    //server.listen(80);
 // const getFakeProdData  =() => {
 //     let msg = {watts: Math.floor(Math.random() * 14500)/1000 }
 //     return msg;
