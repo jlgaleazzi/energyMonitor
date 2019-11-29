@@ -1,9 +1,11 @@
 import time
 import serial
-import socket
+import io
+import asyncio
+import websockets
 
-HOST = '10.118.87.112'
-PORT = 65432
+HOST = 'ws://10.118.87.112:80/ccin'
+
 
 
 
@@ -16,19 +18,23 @@ ser = serial.Serial(
     timeout=1
     )
 
-def send(xml):
+sio = io.TextIOWrapper(io.BufferedRWPair(ser,ser))
+
+
+async def send(xml):
     # parse xml. convert to json and save in file
     print('cnnecting')
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.connect((HOST,PORT))
-        print('sending')
-        print(xml)
-        s.sendall(xml)
-        s.close()
-        print('closed connection')
+    async with websockets.connect(HOST) as websocket:
+        await websocket.send(xml);
+        response = await websocket.recv();
+        print(response);
+
+
+
+
 
 while 1:
-    xml = ser.readline()
+    xml = sio.readline()
     if xml:
-        send(xml)
-        
+        asyncio.get_event_loop().run_until_complete(send(xml))
+

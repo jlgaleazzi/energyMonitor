@@ -9,7 +9,9 @@ const app = express();
 const port = 80;
 const ws = require('express-ws')(app);
 
-
+const solarE = new events.EventEmitter();
+const consumedE = new events.EventEmitter();
+app.use(express.static(Path.join(__dirname, '/../client/public')))
 app.ws('/ccin', (ws,req) => {
     ws.on('message',(msg) => {
         // process data
@@ -17,7 +19,7 @@ app.ws('/ccin', (ws,req) => {
             xmltojs.parseString(xml,(err,res) => {
                 if (err) {
                     console.log('error parsing data')
-                    ws.send('error parsing data');
+                    //ws.send('error parsing data');
                 } else
                 {
                     consumedE.emit('newData',res);
@@ -45,27 +47,26 @@ app.ws('/ccin', (ws,req) => {
     })
 })
 
-app.use((req,res,next)=> {
-    console.log('middleware');
-    req.testing = 'testing';
-    return next();
-})
+// app.use((req,res,next)=> {
+//     req.testing = 'testing';
+//     return next();
+// })
 
 app.ws('/solar', (ws,req) => {
-    ws.on('connection',(ws) => {
-        solarE.on('data'), data => {
-            console.log('solar '+JSON.stringify(data))
+    ws.on('message',(msg) => {
+        solarE.on('data', (data) => {
             ws.send(JSON.stringify(data));
-        }
+        })
     })
 
 })
 
 app.ws('/ccout', (ws,req) => {
-    ws.on('connection',(ws) => {
+    ws.on('message',(msg) => {
         consumedE.on('newData',(data) => {
-           console.log('send new data '+data);
-            ws.send(data);
+           let jsonData = JSON.stringify(data);
+           //console.log('send new data '+jsonData);
+            ws.send(JSON.stringify(jsonData));
         })
     })
 })
@@ -76,8 +77,7 @@ app.get('/', (req,res,next) => {
 
 app.listen(port,() => console.log(`Express listening on port ${port}`));
 
-const solarE = new events.EventEmitter();
-const consumedE = new events.EventEmitter();
+
 
 setInterval(()=> {
     getData();
@@ -104,7 +104,7 @@ const getData = ((cb) =>{
 
     })
     .catch((err)=> {
-        console.log('nodata');
+        console.log(err +' nodata');
          });
     })
 

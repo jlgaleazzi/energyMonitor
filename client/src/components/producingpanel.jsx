@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import Gauge from './Gauge';
+const socketURL = `ws://${window.location.hostname}`;
+
 class ProducingPanel extends Component {
     constructor(props) {
         super(props);
@@ -15,7 +17,7 @@ class ProducingPanel extends Component {
     }
     componentDidMount() {
         // connect to socket server
-        let socket = new WebSocket('ws://127.0.0.1:80/ccout');
+        let socket = new WebSocket(`${socketURL}/solar`);
         socket.addEventListener('open',((e) => {
             socket.send('ProducePanel Connected');
         }))

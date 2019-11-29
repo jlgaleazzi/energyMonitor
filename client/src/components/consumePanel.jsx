@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Gauge from './Gauge';
-
+const socketURL = `ws://${window.location.hostname}`;
 class ConsumePanel extends Component {
     constructor(props) {
         super(props);
@@ -12,10 +12,11 @@ class ConsumePanel extends Component {
 
     componentDidMount() {
         // connect to socket ser
-      
-        let socket = new WebSocket('ws://127.0.0.1/ccout');
+
+        let socket = new WebSocket(`${socketURL}/ccout`);
         socket.addEventListener('open',((e) => {
             console.log('consume Panel Connected');
+            socket.send('requestData');
         }))
         socket.addEventListener('message', (e) => {
             console.log('receiving '+e.data);
@@ -27,7 +28,7 @@ class ConsumePanel extends Component {
                 watts:watts,
                 time:time,
             })
-        }) 
+        })
     }
 
     render() {
@@ -41,4 +42,3 @@ class ConsumePanel extends Component {
 }
 
 export default ConsumePanel;
- 
