@@ -38,7 +38,7 @@ class Gauge extends Component {
         let gauge = new Chart(ctx, {
             type:'doughnut',
             data: {
-                labels: ['Now','Peak'],
+                labels: ['Producing','Consuming'],
                 datasets: [{
                     data: this.props.energyNow,
                     backgroundColor: this.state.backgroundColor

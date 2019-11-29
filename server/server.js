@@ -15,14 +15,17 @@ app.use(express.static(Path.join(__dirname, '/../client/public')))
 app.ws('/ccin', (ws,req) => {
     ws.on('message',(msg) => {
         // process data
+       // console.log('received ccin:'+msg);
             let xml = msg;
             xmltojs.parseString(xml,(err,res) => {
                 if (err) {
-                    console.log('error parsing data')
-                    //ws.send('error parsing data');
+                    console.log('error parsing data');
+                    console.log(xml);
+                    ws.send('error parsing data');
                 } else
                 {
-                    consumedE.emit('newData',res);
+                   
+                    
                     let path = Path.resolve(__dirname,'readings/consumption.json')
                     if (res.msg.hasOwnProperty('hist')) {
                         // save or append to file
@@ -34,26 +37,31 @@ app.ws('/ccin', (ws,req) => {
                                 }
                             })
                     } else {
-
                         fs.writeFile(path, JSON.stringify(res),(err) => {
                             if (err) {
                                 console.log('error writing file '+err)
                             }
                         })
+                        const edata = {};
+                        edata.time = res.msg.time[0];
+                        edata.tmp = res.msg.tmprF[0];
+                        edata.watts = Number(res.msg.ch1[0].watts) + Number(res.msg.ch2[0].watts);
+                        consumedE.emit('newData',edata);
+
                     }
+                   
+                    ws.send('received payload')
                 }
-            ws.send('received payload')
+          
         })
     })
 })
 
-// app.use((req,res,next)=> {
-//     req.testing = 'testing';
-//     return next();
-// })
+
 
 app.ws('/solar', (ws,req) => {
     ws.on('message',(msg) => {
+        console.log('receive from client '+msg);
         solarE.on('data', (data) => {
             ws.send(JSON.stringify(data));
         })
@@ -63,10 +71,11 @@ app.ws('/solar', (ws,req) => {
 
 app.ws('/ccout', (ws,req) => {
     ws.on('message',(msg) => {
+        console.log('ccout received from client: '+ msg)
         consumedE.on('newData',(data) => {
            let jsonData = JSON.stringify(data);
            //console.log('send new data '+jsonData);
-            ws.send(JSON.stringify(jsonData));
+            ws.send(jsonData);
         })
     })
 })
@@ -92,7 +101,7 @@ const getData = ((cb) =>{
         var d = new Date(0);
         d.setUTCSeconds(time);
         let day = d.getDate();
-        let month = d.getMonth();
+        let month = d.getMonth() + 1;
         let year = d.getFullYear();
         let filename = `${year}_${month}_${day}`;
         let path = Path.resolve(__dirname,`readings/${filename}.json`)
