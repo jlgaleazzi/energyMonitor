@@ -21,11 +21,11 @@ app.ws('/ccin', (ws,req) => {
                 if (err) {
                     console.log('error parsing data');
                     console.log(xml);
-                    ws.send('error parsing data');
+                   // ws.send('error parsing data');
                 } else
                 {
-                   
-                    
+
+
                     let path = Path.resolve(__dirname,'readings/consumption.json')
                     if (res.msg.hasOwnProperty('hist')) {
                         // save or append to file
@@ -49,10 +49,10 @@ app.ws('/ccin', (ws,req) => {
                         consumedE.emit('newData',edata);
 
                     }
-                   
+
                     ws.send('received payload')
                 }
-          
+
         })
     })
 })
@@ -63,7 +63,11 @@ app.ws('/solar', (ws,req) => {
     ws.on('message',(msg) => {
         console.log('receive from client '+msg);
         solarE.on('data', (data) => {
-            ws.send(JSON.stringify(data));
+            ws.send(JSON.stringify(data),(err,res) => {
+                if (err) {
+                    console.log("there was an error - solar");
+                }
+            });
         })
     })
 
@@ -75,7 +79,11 @@ app.ws('/ccout', (ws,req) => {
         consumedE.on('newData',(data) => {
            let jsonData = JSON.stringify(data);
            //console.log('send new data '+jsonData);
-            ws.send(jsonData);
+            ws.send(jsonData, (err,res)=> {
+                if (err) {
+                    console.log("there was an error -- ccout");
+                }
+             });
         })
     })
 })

@@ -7,7 +7,7 @@ class ProducingPanel extends Component {
         super(props);
         this.state = {
             wNow:0,
-            time:new Date().toTimeString(),
+            time:new Date().toLocaleTimeString('en-US'),
             date:new Date().toDateString(),
             whToday:0,
             whLastSevenDays:0,
@@ -33,7 +33,6 @@ class ProducingPanel extends Component {
             let kwatts = Number((data.production[1].wNow)/1000).toFixed(2);
             this.setState({
                 wNow:kwatts,
-                time:time,
                 whToday: data.production[1].whToday,
                 whLastSevenDays: data.production[1].whLastSevenDays,
                 energyNow:[kwatts,this.state.cNow]
@@ -58,19 +57,52 @@ class ProducingPanel extends Component {
 
     }
     render() {
-        return <div>
-                <h1>Solar Output</h1>
-                <div>{this.state.date}</div>
-                <Gauge energyNow={this.state.energyNow}/>
-                <div>
-                    <div className='wattsNow'>{this.state.wNow} Kw</div>
-                    <div className='wattsNow'>{this.state.cNow} Kw</div>
+        return <div className='dashContainer'>
+                    <div className='meter_widget'>
+                        <div className='widget_title'>Energy Meter</div>
+                        <Gauge energyNow={this.state.energyNow}/>
+                        <div className='numeric_container'>
+                            <div className='wattsNow'>{this.state.wNow} Kwh</div>
+                            <div className='wattsNow'>{this.state.cNow} Kwh</div>
+                        </div>
+                    </div>
+                    <div className="column_2">
+                        <div className="production">
+                            <div className='widget_title'>Production</div>
+                            <div className="historic">
+                                <div><h2>Today</h2></div>
+                                <div>
+                                    <h1>
+                                    {Number((this.state.whToday)/1000).toFixed(2)}
+                                    </h1>
+                                </div>
+                                * Killowats
+                            </div>
+                            <div className="historic">
+                                <div><h2>Last 7 days</h2></div>
+                                <div>
+                                    <h1>
+                                    {Number((this.state.whLastSevenDays)/1000).toFixed(2)}
+                                    </h1>
+                                    * Killowatts
+                                </div>
+                            </div>
+                        </div>
+                        <div className='clock'>
+                            <div className='widget_title'>Clock</div>
+                            <div className="clock_content">
+                                <div>
+                                    <h2>{this.state.date}</h2>
+                                </div>
+                                <div>
+                                    <h1>{this.state.time}</h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div>{this.state.whToday}</div>
-                <div>{this.state.whLastSevenDays}</div>
-                <div>{this.state.time}</div>
 
-           </div>
+
     }
 
 }

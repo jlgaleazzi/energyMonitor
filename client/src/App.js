@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {hot} from 'react-hot-loader';
-import './App.css'
 import ProducingPanel from './components/producingpanel'
 
 class App extends Component {
