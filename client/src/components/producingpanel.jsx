@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Gauge from './Gauge';
-const socketURL = `ws://${window.location.hostname}`;
+const socketURL = `ws://${window.location.hostname}:5431`;
 
 class ProducingPanel extends Component {
     constructor(props) {
