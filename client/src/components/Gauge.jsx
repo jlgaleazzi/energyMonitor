@@ -6,8 +6,8 @@ class Gauge extends Component {
         super(props);
         this.state = {
             data:[0, 3.7],
-            backgroundColor:[ 'rgba(0,115,30,.5)',
-            'rgba(255,10,0,.3)',
+            backgroundColor:[ '#3D9E92',
+            '#F07A67',
             'rgba(0,0,0,1)']
         }
     }
@@ -48,7 +48,7 @@ class Gauge extends Component {
                 rotation:Math.PI,
                 cutoutPercentage:60,
                 plugins: {
-                    backgroundColor: 'rgba(0,0,0,0.5)',
+                    backgroundColor: 'rgba(0,0,0,0.8)',
                     borderColor:'#000000',
                     color: function(context) {
                         return context.dataset.backgroundColor;
@@ -56,7 +56,7 @@ class Gauge extends Component {
                     font: function(context) {
                         var w = context.chart.width;
                         return {
-                            size: w < 512 ? 18 : 20
+                            size: w < 512 ? 18 : 30
                         }
                     },
                     align: 'start',

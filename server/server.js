@@ -21,7 +21,7 @@ app.ws('/ccin', (ws,req) => {
                 if (err) {
                     console.log('error parsing data');
                     console.log(xml);
-                   // ws.send('error parsing data');
+                    ws.send('error parsing data');
                 } else
                 {
 

@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import Gauge from './Gauge';
+import ProductionHistory from './productionHistory';
+import Clock from './clock';
 const socketURL = `ws://${window.location.hostname}:5431`;
 
 class ProducingPanel extends Component {
@@ -67,38 +69,11 @@ class ProducingPanel extends Component {
                         </div>
                     </div>
                     <div className="column_2">
-                        <div className="production">
-                            <div className='widget_title'>Production</div>
-                            <div className="historic">
-                                <div><h2>Today</h2></div>
-                                <div>
-                                    <h1>
-                                    {Number((this.state.whToday)/1000).toFixed(2)}
-                                    </h1>
-                                </div>
-                                * Killowats
-                            </div>
-                            <div className="historic">
-                                <div><h2>Last 7 days</h2></div>
-                                <div>
-                                    <h1>
-                                    {Number((this.state.whLastSevenDays)/1000).toFixed(2)}
-                                    </h1>
-                                    * Killowatts
-                                </div>
-                            </div>
-                        </div>
-                        <div className='clock'>
-                            <div className='widget_title'>Clock</div>
-                            <div className="clock_content">
-                                <div>
-                                    <h2>{this.state.date}</h2>
-                                </div>
-                                <div>
-                                    <h1>{this.state.time}</h1>
-                                </div>
-                            </div>
-                        </div>
+                        <ProductionHistory
+                        whToday={this.state.whToday}
+                        whLastSevenDays={this.state.whLastSevenDays}
+                        />
+                        <Clock />
                     </div>
                 </div>
 

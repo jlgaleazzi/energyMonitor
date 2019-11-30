@@ -1,12 +1,15 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+
 body {
-  background-color: black;
+  background-color: rgb(13,11,36);
   color: ghostwhite;
   font-size: 13px;
+  font-family: 'Roboto', sans-serif;
 }
 .App {
-  background-color: rgb(25, 25, 26);
+  background-color: rgb(27, 37, 53);
   margin: 1rem;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Roboto', sans-serif;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -53,7 +56,7 @@ body {
   font-size: 1em;
   padding-top: 5px;
   padding-bottom: 5px;
-  background-color: rgb(56,56,56);
+  background-color:  rgb(21, 30, 43);
 }
 .historic {
   padding-left: 10px;
@@ -61,8 +64,9 @@ body {
   padding-bottom: 5px;
 }
 .historic h1 {
-  color: rgba(0,115,30,0.8);
-  font-size: 4em;
+  color:#3D9E92;
+  font-size: 6em;
+  font-weight: bolder;
   text-align: center;
 }
 .column_2 {

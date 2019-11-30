@@ -4,7 +4,7 @@ import io
 import asyncio
 import websockets
 
-HOST = 'ws://10.118.87.112:80/ccin'
+HOST = 'ws://miniserver.local:5431/ccin'
 
 
 
@@ -34,7 +34,11 @@ async def send(xml):
 
 
 while 1:
-    xml = sio.readline()
-    if xml:
-        asyncio.get_event_loop().run_until_complete(send(xml))
+    try:
+        xml = sio.readline()
+        if xml:
+            asyncio.get_event_loop().run_until_complete(send(xml))
+    except:
+        print('problem reading xml');
+
 
