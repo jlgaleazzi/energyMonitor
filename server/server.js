@@ -6,7 +6,7 @@ const axios = require('axios');
 const events = require('events');
 const express = require('express');
 const app = express();
-const port = 80;
+const port = 5431;
 const ws = require('express-ws')(app);
 
 const solarE = new events.EventEmitter();
