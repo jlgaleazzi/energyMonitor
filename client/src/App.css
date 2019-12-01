@@ -7,8 +7,6 @@ body {
   font-family: 'Roboto', sans-serif;
 }
 .App {
-  background-color: rgb(27, 37, 53);
-  margin: 1rem;
   font-family: 'Roboto', sans-serif;
   display: flex;
   flex-direction: row;
@@ -27,16 +25,17 @@ body {
   width:100%;
   display: flex;
   flex-direction: row;
-  padding: 20px;
+  flex-wrap: wrap;
+  max-width: max-content;
 }
 .meter_widget {
   flex-grow: 2;
-  width: 100%;
+  width:auto;
   align-content: center;
-  min-width: 500px;
   border-color: black;
-  border-width: 1px;
+  border-width: 2px;
   border-style: solid;
+  background-color: rgb(27, 37, 53);
 }
 .numeric_container {
   display: flex;
@@ -50,6 +49,7 @@ body {
   border-color: black;
   border-width: 1px;
   border-style: solid;
+  background-color: rgb(27, 37, 53);
 }
 .widget_title {
   text-align: center;
@@ -71,8 +71,8 @@ body {
   text-align: center;
 }
 .column_2 {
+  width:auto;
   flex-grow: 1;
-  min-width: 25%;
   display: flex;
   flex-direction: column;
 }
@@ -81,6 +81,7 @@ body {
   border-color: black;
   border-width: 1px;
   border-style: solid;
+  background-color: rgb(27, 37, 53);
 }
 .clock h1 {
   vertical-align:middle;
