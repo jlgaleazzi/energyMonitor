@@ -1,5 +1,5 @@
 ## Energy Monitor
-Energy monitor is a energy monitoring utility to monitor my solar panel production as well as my energy consumption.
+Energy monitor is an energy monitoring utility to monitor my solar panel production as well as my energy consumption.
 
 The front end is created with the React library, using Websockets to communicate with an Express (Node.js) server.
 
