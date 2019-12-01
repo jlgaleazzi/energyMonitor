@@ -13,6 +13,7 @@ body {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  width: 100%;
 }
 
 .wattsNow {
@@ -65,7 +66,7 @@ body {
 }
 .historic h1 {
   color:#3D9E92;
-  font-size: 6em;
+  font-size: 4em;
   font-weight: bolder;
   text-align: center;
 }
