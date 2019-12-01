@@ -15,7 +15,7 @@ body {
 }
 
 .wattsNow {
-  font-size: 3rem;
+  font-size: 2rem;
 }
 
 .gauge {
@@ -26,7 +26,6 @@ body {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  max-width: max-content;
 }
 .meter_widget {
   flex-grow: 2;

@@ -64,9 +64,10 @@ class ProducingPanel extends Component {
                         <div className='widget_title'>Energy Meter</div>
                         <Gauge energyNow={this.state.energyNow}/>
                         <div className='numeric_container'>
-                            <div className='wattsNow'>{this.state.wNow} Kwh</div>
-                            <div className='wattsNow'>{this.state.cNow} Kwh</div>
+                            <div className='wattsNow'>{this.state.wNow}</div>
+                            <div className='wattsNow'>{this.state.cNow}</div>
                         </div>
+                        <div>* Kilowatts/hour</div>
                     </div>
                     <div className="column_2">
                         <ProductionHistory
