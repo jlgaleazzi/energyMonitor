@@ -9,3 +9,4 @@ with the ENV45 sends streams of xml every 10 seconds, The Raspberry Pi just rela
 
 The energy production is done by accesing the local empase energy monitoring server which outputs json with the data
 
+[Check it live](http://www.estudioux.com:5431 "Energy Monitor")
