@@ -27,7 +27,7 @@ app.ws('/ccin', (ws,req) => {
 
 
                     let path = Path.resolve(__dirname,'readings/consumption.json')
-                    if (res.msg.hasOwnProperty('hist')) {
+                    if (res !== null && res.msg.hasOwnProperty('hist')) {
                         // save or append to file
                         console.log('saving history file');
                         let histPath = Path.resolve(__dirname,'readings/history.json')
