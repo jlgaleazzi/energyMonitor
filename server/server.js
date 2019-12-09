@@ -42,11 +42,13 @@ app.ws('/ccin', (ws,req) => {
                                 console.log('error writing file '+err)
                             }
                         })
-                        const edata = {};
-                        edata.time = res.msg.time[0];
-                        edata.tmp = res.msg.tmprF[0];
-                        edata.watts = Number(res.msg.ch1[0].watts) + Number(res.msg.ch2[0].watts);
-                        consumedE.emit('newData',edata);
+                        if (res !== null) {
+                            const edata = {};
+                            edata.time = res.msg.time[0];
+                            edata.tmp = res.msg.tmprF[0];
+                            edata.watts = Number(res.msg.ch1[0].watts) + Number(res.msg.ch2[0].watts);
+                            consumedE.emit('newData',edata);
+                        }
 
                     }
 
