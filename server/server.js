@@ -13,9 +13,9 @@ const solarE = new events.EventEmitter();
 const consumedE = new events.EventEmitter();
 app.use(express.static(Path.join(__dirname, "/../client/public")));
 app.ws("/ccin", (ws, req) => {
+  console.log("ccin");
   ws.on("message", msg => {
-    // process data
-    // console.log('received ccin:'+msg);
+    console.log("received ccin:" + msg);
     let xml = msg;
     xmltojs.parseString(xml, (err, res) => {
       if (err) {
@@ -61,7 +61,7 @@ app.ws("/ccin", (ws, req) => {
 
 app.ws("/solar", (ws, req) => {
   ws.on("message", msg => {
-    console.log("receive from client " + msg);
+    console.log("solar receive from client " + msg);
     solarE.on("data", data => {
       ws.send(JSON.stringify(data), (err, res) => {
         if (err) {
@@ -91,7 +91,9 @@ app.get("/", (req, res, next) => {
   res.end();
 });
 
-app.listen(port, () => console.log(`Express listening on port ${port}`));
+app.listen(port, () =>
+  console.log(`Energy Monitor (0.03) listening on port  ${port}`)
+);
 
 setInterval(() => {
   getData();
@@ -99,7 +101,7 @@ setInterval(() => {
 
 const getData = cb => {
   axios
-    .get("http://10.118.87.104/production.json")
+    .get("http://10.118.87.105/production.json")
     .then(response => {
       data = response.data;
       solarE.emit("data", data);
