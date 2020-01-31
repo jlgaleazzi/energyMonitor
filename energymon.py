@@ -29,10 +29,10 @@ async def send(xml):
 
 
 while 1:
-    try:
-        xml = sio.readline()
-        print(xml)
-        if xml:
-            asyncio.get_event_loop().run_until_complete(send(xml))
-    except:
-        print('problem reading xml')
+
+    xml = sio.readline()
+    print(xml)
+    # if xml:
+    # asyncio.get_event_loop().run_until_complete(send(xml))
+    # except:
+ #   print('problem reading xml')
