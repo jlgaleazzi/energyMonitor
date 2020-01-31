@@ -30,7 +30,7 @@ async def send(xml):
 
 while 1:
 
-    xml = sio.readline()
+    xml = ser.readline()
     print(xml)
     # if xml:
     # asyncio.get_event_loop().run_until_complete(send(xml))
