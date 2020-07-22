@@ -10,14 +10,17 @@ import './App.css';
 
 function App() {
 const [solarEnergy,setSolarEnergy] = useState(3.50);
-const [solarMax, setSolaerMax] = useState(3.7);
+const [solarMax, setSolarMax] = useState(3.7);
 
   return (
-   <Gauge 
-   title="Solar energy produced"
-   value={solarEnergy}
-   maxValue={maxValue}
-   ></Gauge>
+    
+    <header className="App-header">
+    <Gauge 
+        title="Solar energy produced"
+        value={solarEnergy}
+        maxValue={solarMax}
+    ></Gauge>
+   </header>
   );
 }
 

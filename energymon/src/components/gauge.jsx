@@ -9,12 +9,12 @@ const Gauge = (props) => {
     // register gsap plugin
     gsap.registerPlugin(DrawSVGPlugin);
     useEffect(()=> {
-      gsap.To( chartRef.current,  {duration:1, drawSVG:"66%"})
+      gsap.fromTo( chartRef.current,{drawSVG:"0"},  {duration:1, drawSVG:"66%"})
     })
 
     return(
         <div className="App">
-        <header className="App-header">
+        
           <svg xmlns="http://www.w3.org/2000/svg"
             xmlnsXlink="http://www.w3.org/1999/xlink"
             viewBox="0 0 344.54 230.03"
@@ -38,7 +38,7 @@ const Gauge = (props) => {
               </g>
             </g>
           </svg>
-        </header>
+      
       </div>
 
     )
