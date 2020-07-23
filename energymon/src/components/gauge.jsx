@@ -22,7 +22,7 @@ const Gauge = (props) => {
     })
 
     return(
-        <div className="App">
+        <div className="flex-item">
           <svg xmlns="http://www.w3.org/2000/svg"
             xmlnsXlink="http://www.w3.org/1999/xlink"
             viewBox="0 0 344.54 230.03"
