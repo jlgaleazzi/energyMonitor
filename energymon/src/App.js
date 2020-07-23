@@ -14,12 +14,13 @@ const [solarMax, setSolarMax] = useState(3.7);
 
   return (
     
-    <header className="App-header">
-    <Gauge 
-        title="Solar energy produced"
-        value={solarEnergy}
-        maxValue={solarMax}
-    ></Gauge>
+  <header className="App-header">
+    <input type="text" onChange={e => setSolarEnergy(e.target.value)} />
+   <Gauge 
+    title="Solar energy produced"
+    value={solarEnergy}
+    maxValue={solarMax}
+   ></Gauge>
    </header>
   );
 }
