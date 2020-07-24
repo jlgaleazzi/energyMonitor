@@ -11,7 +11,7 @@ const ws = require("express-ws")(app);
 
 const solarE = new events.EventEmitter();
 const consumedE = new events.EventEmitter();
-app.use(express.static(Path.join(__dirname, "/../client/public")));
+app.use(express.static(Path.join(__dirname, "/../energymon/build")));
 app.ws("/ccin", (ws, req) => {
   console.log("ccin");
   ws.on("message", (msg) => {
