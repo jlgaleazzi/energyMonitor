@@ -8,14 +8,19 @@ const Gauge = (props) => {
     const maxValue = props.maxValue;
     const valueInPct = String(((value/maxValue)*100).toFixed(2))+"%";
     const chartRef = useRef(null);
+    
+    
+
     const usePrevious = (val) => {
       const ref = useRef();
       useEffect(()=> {
+      
         ref.current = val;
       })
       return ref.current;
     }
-    const previousValueInPct = String(((usePrevious(value/100)/maxValue)*100).toFixed(2))+"%";
+    const previousCount = usePrevious(value);
+    const previousValueInPct = String(((previousCount/maxValue)*100).toFixed(2))+"%";
     gsap.registerPlugin(DrawSVGPlugin);
     useEffect(()=> {
       gsap.fromTo( chartRef.current,{drawSVG:previousValueInPct},  {duration:1, drawSVG:valueInPct})
