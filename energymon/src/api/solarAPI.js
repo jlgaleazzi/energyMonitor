@@ -1,20 +1,14 @@
-import { handleResponse } from './apiUtils';
-
-
+import { handleResponse } from "./apiUtils";
 
 const socketURL = `ws://${window.location.hostname}:5431`;
 
-
 export function connectToSolar() {
-    let solarSocket = new WebSocket(`${socketURL}/solar`);
-    solarSocket.addEventListener("open", () => {
-        solarSocket.send('ProducePanel Connected')
-    });
-    solarSocket.addEventListener("message", (e) => {
-        const solarData = JSON.parse(e.data);
-        console.log('received solar data')
-        handleResponse(solarData)
-
-    })
-
-} 
+  let solarSocket = new WebSocket(`${socketURL}/solar`);
+  solarSocket.addEventListener("open", () => {
+    solarSocket.send("ProducePanel Connected");
+  });
+  solarSocket.addEventListener("message", (e) => {
+    const solarData = JSON.parse(e.data);
+    handleResponse(solarData);
+  });
+}

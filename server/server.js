@@ -52,7 +52,6 @@ app.ws("/ccin", (ws, req) => {
             consumedE.emit("newData", edata);
           }
         }
-
         ws.send("received payload");
       }
     });
@@ -62,6 +61,7 @@ app.ws("/ccin", (ws, req) => {
 app.ws("/solar", (ws, req) => {
   ws.on("message", (msg) => {
     console.log("solar receive from client " + msg);
+    getData();
     solarE.on("data", (data) => {
       ws.send(JSON.stringify(data), (err, res) => {
         if (err) {
@@ -123,5 +123,3 @@ const getData = (cb) => {
       console.log(err + " nodata");
     });
 };
-
-getData();
