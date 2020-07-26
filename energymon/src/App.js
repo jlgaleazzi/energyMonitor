@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
-import Gauge from "./components/gauge";
-import { connectToSolar } from './api/solarAPI'
+import { connect } from "react-redux";
+import Solar from "./components/solar";
+import { connectToSolar } from "./api/solarAPI";
 
 import "./App.css";
 
 function App() {
-  const [solarEnergy, setSolarEnergy] = useState(0);
-  const [solarMax, setSolarMax] = useState(3.7);
   // const [consumedEnergy, setConsumedEnergy] = useState(2.34);
   // const [consumedMax, setConsumedMax] = useState(5.6);
   // const socketURL = `ws://${window.location.hostname}:5431`;
@@ -25,18 +24,12 @@ function App() {
     // });
 
     // current cost
-    connectToSolar()
+    connectToSolar();
   });
 
   return (
     <header className="App-header">
-      <div className="container">
-        <Gauge
-          title="Solar energy produced"
-          value={solarEnergy}
-          maxValue={solarMax}
-        ></Gauge>
-      </div>
+      <Solar />
     </header>
   );
 }
