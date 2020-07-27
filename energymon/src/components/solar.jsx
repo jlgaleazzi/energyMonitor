@@ -4,7 +4,8 @@ import propTypes from "prop-types";
 import Gauge from "./gauge";
 import { getSolarSuccess } from "../redux/actions/solarActions";
 const Solar = (props) => {
-  const socketURL = `ws://${window.location.hostname}:5431`;
+  //const socketURL = `ws://${window.location.hostname}:5431`;
+  const socketURL = `ws://miniserver.local:5431`;
   const dispatch = useDispatch();
   const [solarwNow, setsolarWnow] = useState(props.solarwNow);
   const [solarMax, setSolarMax] = useState(3.7);
@@ -18,7 +19,7 @@ const Solar = (props) => {
       let solar = solarData.production[1];
       dispatch(getSolarSuccess(solar));
     });
-  }, []);
+  }, [dispatch, solarSocket]);
 
   return (
     <Gauge

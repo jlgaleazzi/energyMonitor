@@ -5,7 +5,8 @@ import propTypes from "prop-types";
 import Gauge from "./gauge";
 
 const Consumed = (props) => {
-  const socketURL = `ws://${window.location.hostname}:5431`;
+  //const socketURL = `ws://${window.location.hostname}:5431`;
+  const socketURL = `ws://miniserver.local:5431`;
   const dispatch = useDispatch();
   const [consumedNow, setConsumedNow] = useState(props.consumedNow);
   const consumedSocket = new WebSocket(`${socketURL}/ccout`);
@@ -18,16 +19,16 @@ const Consumed = (props) => {
       let watts = Number(data.watts).toFixed(2);
       dispatch(getConsumedSuccess(watts));
     });
-  }, []);
+  }, [dispatch, consumedSocket]);
 
   return (
-    <Gauge title="Energy Consumption" value={props.consumedNow} maxValue={0} />
+    <Gauge title="Energy Consumption" value={props.consumedNow} maxValue={6} />
   );
 };
 
 const mapStateToProps = (state) => {
   return {
-    consumedNow: state.consumedNow,
+    consumedNow: state.consumed.consumedNow,
   };
 };
 export default connect(mapStateToProps)(Consumed);

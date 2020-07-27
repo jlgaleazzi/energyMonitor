@@ -8,7 +8,7 @@ export default function ConsumedReducer(
   switch (action.type) {
     case types.GET_CONSUMED_SUCCESS:
       return Object.assign({}, state, {
-        consumedNow: action.kwh,
+        consumedNow: action.info,
       });
     default:
       return state;
