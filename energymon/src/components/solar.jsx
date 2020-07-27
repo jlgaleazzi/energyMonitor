@@ -3,14 +3,10 @@ import { connect, useDispatch } from "react-redux";
 import * as types from "../redux/actions/actionTypes";
 import propTypes from "prop-types";
 import Gauge from "./gauge";
-const Solar = () => {
+const Solar = (props) => {
   const socketURL = `ws://${window.location.hostname}:5431`;
   const dispatch = useDispatch();
-  const [solarEnergy, setSolarEnergy] = useState({
-    wNow: 0,
-    whLastSevenDays: 0,
-    whToday: 0,
-  });
+  const [solarwNow, setsolarWnow] = useState(props.solarwNow);
   const [solarMax, setSolarMax] = useState(3.7);
   const solarSocket = new WebSocket(`${socketURL}/solar`);
   useEffect(() => {
@@ -28,7 +24,7 @@ const Solar = () => {
     <div className="container">
       <Gauge
         title="Solar energy produced"
-        value={solarEnergy}
+        value={props.solarwNow}
         maxValue={solarMax}
       ></Gauge>
     </div>
@@ -36,7 +32,7 @@ const Solar = () => {
 };
 function mapStateToProps(state) {
   return {
-    solar: state.solar,
+    solarwNow: state.solar.solarwNow,
   };
 }
 

@@ -4,7 +4,7 @@ import { DrawSVGPlugin } from "gsap/DrawSVGPlugin";
 
 const Gauge = (props) => {
   const chartTitle = props.title;
-  const value = props.value.wNow;
+  const value = (props.value / 1000).toFixed(2);
   const maxValue = props.maxValue;
   const valueInPct = String(((value / maxValue) * 100).toFixed(2)) + "%";
   const chartRef = useRef(null);
