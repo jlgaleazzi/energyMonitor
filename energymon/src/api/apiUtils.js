@@ -1,5 +1,6 @@
 export async function handleResponse(response) {
-  if (response.hasOwnProperty("production")) return response.json;
+  debugger;
+  if (response.json) return response.json();
   throw new Error("Network response was not ok,");
 }
 

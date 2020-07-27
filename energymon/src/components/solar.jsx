@@ -1,9 +1,28 @@
-import React from "react";
-import { connect } from "react-redux";
-
+import React, { useEffect, useState } from "react";
+import { connect, useDispatch } from "react-redux";
+import * as types from "../redux/actions/actionTypes";
+import propTypes from "prop-types";
+import Gauge from "./gauge";
 const Solar = () => {
-  const [solarEnergy, setSolarEnergy] = useState(0);
+  const socketURL = `ws://${window.location.hostname}:5431`;
+  const dispatch = useDispatch();
+  const [solarEnergy, setSolarEnergy] = useState({
+    wNow: 0,
+    whLastSevenDays: 0,
+    whToday: 0,
+  });
   const [solarMax, setSolarMax] = useState(3.7);
+  const solarSocket = new WebSocket(`${socketURL}/solar`);
+  useEffect(() => {
+    solarSocket.addEventListener("open", () => {
+      solarSocket.send("ProducePanel Connected");
+    });
+    solarSocket.addEventListener("message", (e) => {
+      const solarData = JSON.parse(e.data);
+      let solar = solarData.production[1];
+      dispatch({ type: types.GET_SOLAR_SUCCESS, solar });
+    });
+  }, []);
 
   return (
     <div className="container">
@@ -15,10 +34,14 @@ const Solar = () => {
     </div>
   );
 };
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(state) {
   return {
     solar: state.solar,
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Solar);
+Solar.propTypes = {
+  dispatch: propTypes.func.isRequired,
+};
+
+export default connect(mapStateToProps)(Solar);

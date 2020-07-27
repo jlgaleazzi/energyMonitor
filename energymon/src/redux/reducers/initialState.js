@@ -1,4 +1,6 @@
 export default {
-    solar: 0,
-    solarMax: 3.7
-}
+  solar: null,
+  solarreadingTime: null,
+  solarwNow: 0,
+  solarMax: 3.7,
+};

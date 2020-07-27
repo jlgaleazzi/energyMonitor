@@ -1,10 +1,13 @@
 import * as types from "../actions/actionTypes";
 import initialState from "./initialState.js";
 
-export default function SolarReducer(state = initialState.solar, action) {
+export default function SolarReducer(state = initialState.solarwNow, action) {
   switch (action.type) {
     case types.GET_SOLAR_SUCCESS:
-      return [...state, { ...action.solar }];
+      return Object.assign({}, state, {
+        solarwNow: action.solar.wNow,
+        solarReadingTime: action.solar.readingTime,
+      });
     default:
       return state;
   }
