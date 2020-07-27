@@ -63,7 +63,6 @@ app.ws("/solar", (ws, req) => {
     console.log("solar receive from client " + msg);
     getData();
     solarE.on("data", (data) => {
-      console.log(`sending data ${JSON.stringify(data)}`);
       ws.send(JSON.stringify(data), (err, res) => {
         if (err) {
           console.log("there was an error - solar");

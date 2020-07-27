@@ -69,13 +69,6 @@ const Gauge = (props) => {
               d="M17.24,221c-33.48-102,47.3-212.87,155.15-211C280.14,8.15,361,118.92,327.58,220.85"
             />
             <text
-              className="cls-3"
-              id="graph-title"
-              transform="translate(100 146.88)"
-            >
-              {chartTitle}
-            </text>
-            <text
               className="cls-7"
               id="graph-value"
               transform="translate(67.14 204.33) scale(1.09 1)"

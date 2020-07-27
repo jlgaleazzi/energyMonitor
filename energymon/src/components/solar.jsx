@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { connect, useDispatch } from "react-redux";
-import * as types from "../redux/actions/actionTypes";
 import propTypes from "prop-types";
 import Gauge from "./gauge";
+import { getSolarSuccess } from "../redux/actions/solarActions";
 const Solar = (props) => {
   const socketURL = `ws://${window.location.hostname}:5431`;
   const dispatch = useDispatch();
@@ -16,18 +16,16 @@ const Solar = (props) => {
     solarSocket.addEventListener("message", (e) => {
       const solarData = JSON.parse(e.data);
       let solar = solarData.production[1];
-      dispatch({ type: types.GET_SOLAR_SUCCESS, solar });
+      dispatch(getSolarSuccess(solar));
     });
   }, []);
 
   return (
-    <div className="container">
-      <Gauge
-        title="Solar energy produced"
-        value={props.solarwNow}
-        maxValue={solarMax}
-      ></Gauge>
-    </div>
+    <Gauge
+      title="Solar energy produced"
+      value={props.solarwNow}
+      maxValue={solarMax}
+    />
   );
 };
 function mapStateToProps(state) {
