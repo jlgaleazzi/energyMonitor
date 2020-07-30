@@ -11,10 +11,10 @@ const ws = require("express-ws")(app);
 
 const solarE = new events.EventEmitter();
 const consumedE = new events.EventEmitter();
-app.use(express.static(Path.join(__dirname, "/../client/public")));
+app.use(express.static(Path.join(__dirname, "/../energymon/build")));
 app.ws("/ccin", (ws, req) => {
   console.log("ccin");
-  ws.on("message", msg => {
+  ws.on("message", (msg) => {
     console.log("received ccin:" + msg);
     let xml = msg;
     xmltojs.parseString(xml, (err, res) => {
@@ -32,13 +32,13 @@ app.ws("/ccin", (ws, req) => {
           // save or append to file
           console.log("saving history file");
           let histPath = Path.resolve(__dirname, "readings/history.json");
-          fs.appendFile(histPath, `${JSON.stringify(res)}\n`, err => {
+          fs.appendFile(histPath, `${JSON.stringify(res)}\n`, (err) => {
             if (err) {
               console.log("Error appending file " + err);
             }
           });
         } else {
-          fs.writeFile(path, JSON.stringify(res), err => {
+          fs.writeFile(path, JSON.stringify(res), (err) => {
             if (err) {
               console.log("error writing file " + err);
             }
@@ -52,7 +52,6 @@ app.ws("/ccin", (ws, req) => {
             consumedE.emit("newData", edata);
           }
         }
-
         ws.send("received payload");
       }
     });
@@ -60,9 +59,10 @@ app.ws("/ccin", (ws, req) => {
 });
 
 app.ws("/solar", (ws, req) => {
-  ws.on("message", msg => {
+  ws.on("message", (msg) => {
     console.log("solar receive from client " + msg);
-    solarE.on("data", data => {
+    getData();
+    solarE.on("data", (data) => {
       ws.send(JSON.stringify(data), (err, res) => {
         if (err) {
           console.log("there was an error - solar");
@@ -73,9 +73,9 @@ app.ws("/solar", (ws, req) => {
 });
 
 app.ws("/ccout", (ws, req) => {
-  ws.on("message", msg => {
+  ws.on("message", (msg) => {
     console.log("ccout received from client: " + msg);
-    consumedE.on("newData", data => {
+    consumedE.on("newData", (data) => {
       let jsonData = JSON.stringify(data);
       //console.log('send new data '+jsonData);
       ws.send(jsonData, (err, res) => {
@@ -99,10 +99,10 @@ setInterval(() => {
   getData();
 }, 10000);
 
-const getData = cb => {
+const getData = (cb) => {
   axios
-    .get("http://10.118.87.105/production.json")
-    .then(response => {
+    .get("http://10.118.87.104/production.json")
+    .then((response) => {
       data = response.data;
       solarE.emit("data", data);
       var time = data.production[1].readingTime;
@@ -113,15 +113,13 @@ const getData = cb => {
       let year = d.getFullYear();
       let filename = `${year}_${month}_${day}`;
       let path = Path.resolve(__dirname, `readings/${filename}.json`);
-      fs.appendFile(path, `${JSON.stringify(data)}\n`, err => {
+      fs.appendFile(path, `${JSON.stringify(data)}\n`, (err) => {
         if (err) {
           console.log("Error appending file " + err);
         }
       });
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err + " nodata");
     });
 };
-
-getData();
