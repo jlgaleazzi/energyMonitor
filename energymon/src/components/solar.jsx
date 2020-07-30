@@ -23,9 +23,10 @@ const Solar = (props) => {
 
   return (
     <Gauge
-      title="Solar energy produced"
+      className="gauge"
       value={props.solarwNow}
       maxValue={solarMax}
+      title="Solar Energy Produced"
     />
   );
 };

@@ -7,13 +7,11 @@
   pointer-events: none;
 }
 
-
-
 .App-header {
-  background-color: #14142b;
+  background-color: #0c0c1a;
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
@@ -24,4 +22,21 @@
   color: #61dafb;
 }
 
+.widget-title {
+  text-align: left;
+  margin-top: 10px;
+  margin-left: 20px;
+  margin-bottom: 60px;
+}
 
+.widget-container {
+  margin: 10px;
+  width: 450px;
+  padding-bottom: 4rem;
+  background-color: #14142b;
+  border-radius: 15px;
+}
+.gauge {
+  width: 100%;
+  margin: 0 auto;
+}
