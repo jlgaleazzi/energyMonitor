@@ -31,7 +31,7 @@ const Solar = (props) => {
         title="Solar Energy Produced"
       />
       <div>
-        <SubWidget title="Kwh Today" />
+        <SubWidget title="Kwh Today" wattsToday={props.solarToday} />
 
       </div>
 
@@ -41,7 +41,8 @@ const Solar = (props) => {
 };
 function mapStateToProps(state) {
   return {
-    solarwNow: state.solar.solarwNow,
+    solarwNow: state.info.solarwNow,
+    solarToday: state.info.solarWattsToday,
   };
 }
 
