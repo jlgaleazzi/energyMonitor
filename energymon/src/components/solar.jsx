@@ -3,9 +3,10 @@ import { connect, useDispatch } from "react-redux";
 import propTypes from "prop-types";
 import Gauge from "./gauge";
 import { getSolarSuccess } from "../redux/actions/solarActions";
+import SubWidget from "./common/SubWidget";
 const Solar = (props) => {
-  const socketURL = `ws://${window.location.hostname}:5431`;
-  //const socketURL = `ws://miniserver.local:5431`;
+  // const socketURL = `ws://${window.location.hostname}:5431`;
+  const socketURL = `ws://miniserver.local:5431`;
   const dispatch = useDispatch();
   const [solarwNow, setsolarWnow] = useState(props.solarwNow);
   const [solarMax, setSolarMax] = useState(3.7);
@@ -22,12 +23,20 @@ const Solar = (props) => {
   }, [dispatch, solarSocket]);
 
   return (
-    <Gauge
-      className="gauge"
-      value={props.solarwNow}
-      maxValue={solarMax}
-      title="Solar Energy Produced"
-    />
+    <div>
+      <Gauge
+        className="gauge"
+        value={props.solarwNow}
+        maxValue={solarMax}
+        title="Solar Energy Produced"
+      />
+      <div>
+        <SubWidget title="Kwh Today" />
+
+      </div>
+
+
+    </div>
   );
 };
 function mapStateToProps(state) {
