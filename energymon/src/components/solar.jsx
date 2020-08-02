@@ -32,17 +32,14 @@ const Solar = (props) => {
       />
       <div>
         <SubWidget title="Kwh Today" wattsToday={props.solarToday} />
-
       </div>
-
-
     </div>
   );
 };
 function mapStateToProps(state) {
   return {
-    solarwNow: state.info.solarwNow,
-    solarToday: state.info.solarWattsToday,
+    solarwNow: state.solar.solarwNow,
+    solarToday: state.solar.solarWattsToday,
   };
 }
 

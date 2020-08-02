@@ -34,6 +34,13 @@ body {
   margin-bottom: 60px;
 }
 
+.sub-widget-title {
+  text-align: left;
+  margin-top: 10px;
+  margin-left: 20px;
+  font-size: 14px;
+}
+
 .widget-container {
   margin: 10px;
   width: 450px;

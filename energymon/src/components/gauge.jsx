@@ -41,7 +41,7 @@ const Gauge = (props) => {
           id="graphica"
         >
           <defs>
-            <style>{`.cls-1{stroke:#000;stroke-miterlimit:10;stroke-width:4px;}.cls-2{fill:none;stroke-linecap:round;stroke-linejoin:bevel;stroke-width:15px;stroke:url(#linear-gradient);}.cls-3{font-size:12px;fill:#5a5a89;font-family:Roboto-Medium, Roboto;font-weight:500;}.cls-4{letter-spacing:0.01em;}.cls-5{letter-spacing:-0.02em;}.cls-6{letter-spacing:-0.03em;}.cls-7{font-size:60px;}.cls-7,.cls-8{fill:#fff;font-family:Arial-Black, Arial Black;font-weight:800;}.cls-8{font-size:24.26px;}.cls-9{letter-spacing:0.03em;}.cls-10{fill:#282856;}.cls-11{fill:#ffa63f;}`}</style>
+            <style>{`.cls-1{stroke:#000;stroke-miterlimit:10;stroke-width:4px;}.cls-2{fill:none;stroke-linecap:round;stroke-linejoin:bevel;stroke-width:15px;stroke:url(#linear-gradient);}.cls-3{font-size:12px;fill:#5a5a89;font-family:Roboto-Medium, Roboto;font-weight:500;}.cls-4{letter-spacing:0.01em;}.cls-5{letter-spacing:-0.02em;}.cls-6{letter-spacing:-0.03em;}.cls-7{font-size:60px;font-family:Roboto-Medium, Roboto;}.cls-7,.cls-8{fill:#fff;font-family:Roboto-Medium, Roboto;font-weight:800;}.cls-8{font-size:24.26px;}.cls-9{letter-spacing:0.03em;}.cls-10{fill:#282856;}.cls-11{fill:#ffa63f;}`}</style>
             <linearGradient
               id="linear-gradient"
               x1="2.09"
@@ -73,14 +73,14 @@ const Gauge = (props) => {
               <text
                 className="cls-7"
                 id="graph-value"
-                transform="translate(67.14 204.33) scale(1.09 1)"
+                transform="translate(77.14 204.33) scale(1.09 1)"
               >
                 {value}
               </text>
               <text
                 className="cls-8"
                 id="measure"
-                transform="translate(224.88 204.1)"
+                transform="translate(212 204.1)"
               >
                 kWh
               </text>
