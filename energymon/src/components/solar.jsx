@@ -20,7 +20,7 @@ const Solar = (props) => {
       let solar = solarData.production[1];
       dispatch(getSolarSuccess(solar));
     });
-  }, [dispatch, solarSocket]);
+  }, []);
 
   return (
     <div>

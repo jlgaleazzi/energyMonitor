@@ -19,7 +19,7 @@ const Consumed = (props) => {
       let watts = Number(data.watts).toFixed(2);
       dispatch(getConsumedSuccess(watts));
     });
-  }, [dispatch, consumedSocket]);
+  }, []);
 
   return (
     <Gauge title="Energy Consumption" value={props.consumedNow} maxValue={6} />
