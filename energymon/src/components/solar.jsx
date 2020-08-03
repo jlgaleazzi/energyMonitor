@@ -10,6 +10,7 @@ const Solar = (props) => {
   const dispatch = useDispatch();
   const [solarwNow, setsolarWnow] = useState(props.solarwNow);
   const [solarMax, setSolarMax] = useState(3.7);
+  const [solarToday, setSolarToday] = useState(props.solarToday);
   const solarSocket = new WebSocket(`${socketURL}/solar`);
   useEffect(() => {
     solarSocket.addEventListener("open", () => {
