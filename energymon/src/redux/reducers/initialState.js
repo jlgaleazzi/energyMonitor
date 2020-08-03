@@ -6,4 +6,5 @@ export default {
   solarMax: 3.7,
   consumedNow: 0,
   consumedMax: 6,
+  temp: 0,
 };

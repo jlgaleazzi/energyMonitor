@@ -37,8 +37,9 @@ body {
 .sub-widget-title {
   text-align: left;
   margin-top: 10px;
-  margin-left: 20px;
-  font-size: 14px;
+  font-size: 20px;
+  font-weight: bolder;
+  color: rgb(191, 191, 191);
 }
 
 .widget-container {
@@ -51,4 +52,19 @@ body {
 .gauge {
   width: 100%;
   margin: 0 auto;
+}
+
+.sub-widget {
+  width: 100%;
+  margin: 10px;
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-bottom: 10px;
+  background-color: #14142b;
+  border-radius: 15px;
+}
+
+.sub-widget-container {
+  display: flex;
+  flex-direction: row;
 }

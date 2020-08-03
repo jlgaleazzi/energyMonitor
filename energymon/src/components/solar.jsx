@@ -8,9 +8,9 @@ const Solar = (props) => {
   // const socketURL = `ws://${window.location.hostname}:5431`;
   const socketURL = `ws://miniserver.local:5431`;
   const dispatch = useDispatch();
-  const [solarwNow, setsolarWnow] = useState(props.solarwNow);
+  // const [solarwNow, setsolarWnow] = useState(props.solarwNow);
   const [solarMax, setSolarMax] = useState(3.7);
-  const [solarToday, setSolarToday] = useState(props.solarToday);
+  // const [solarToday, setSolarToday] = useState(props.solarToday);
   const solarSocket = new WebSocket(`${socketURL}/solar`);
   useEffect(() => {
     solarSocket.addEventListener("open", () => {
@@ -29,10 +29,11 @@ const Solar = (props) => {
         className="gauge"
         value={props.solarwNow}
         maxValue={solarMax}
-        title="Solar Energy Produced"
+        title="Solar energy produced"
       />
-      <div>
-        <SubWidget title="Kwh Today" wattsToday={props.solarToday} />
+      <div className="sub-widget-container">
+        <SubWidget title="Kwh Today" watts={props.solarToday} />
+        <SubWidget title="Kwh Last Week" watts={props.solarLastSeven} />
       </div>
     </div>
   );
@@ -41,6 +42,7 @@ function mapStateToProps(state) {
   return {
     solarwNow: state.solar.solarwNow,
     solarToday: state.solar.solarWattsToday,
+    solarLastSeven: state.solar.solarWhLastSevenDays,
   };
 }
 
