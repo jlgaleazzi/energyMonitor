@@ -5,8 +5,8 @@ import propTypes from "prop-types";
 import Gauge from "./gauge";
 
 const Consumed = (props) => {
-  //const socketURL = `ws://${window.location.hostname}:5431`;
-  const socketURL = `ws://miniserver.local:5431`;
+  const socketURL = `ws://${window.location.hostname}:5431`;
+  //const socketURL = `ws://miniserver.local:5431`;
   const dispatch = useDispatch();
   const consumedSocket = new WebSocket(`${socketURL}/ccout`);
   const [time, setTime] = useState("00:00");
