@@ -5,12 +5,10 @@ import Gauge from "./gauge";
 import { getSolarSuccess } from "../redux/actions/solarActions";
 import SubWidget from "./common/SubWidget";
 const Solar = (props) => {
-  // const socketURL = `ws://${window.location.hostname}:5431`;
-  const socketURL = `ws://miniserver.local:5431`;
+  const socketURL = `ws://${window.location.hostname}:5431`;
+  //const socketURL = `ws://miniserver.local:5431`;
   const dispatch = useDispatch();
-  // const [solarwNow, setsolarWnow] = useState(props.solarwNow);
   const [solarMax, setSolarMax] = useState(3.7);
-  // const [solarToday, setSolarToday] = useState(props.solarToday);
   const solarSocket = new WebSocket(`${socketURL}/solar`);
   useEffect(() => {
     solarSocket.addEventListener("open", () => {
