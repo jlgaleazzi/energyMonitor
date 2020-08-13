@@ -2,7 +2,6 @@ body {
   background-color: #0c0c1a;
 }
 .App {
-  text-align: center;
   background-color: #0c0c1a;
 }
 
@@ -12,15 +11,17 @@ body {
 }
 
 .App-header {
+  height: 100%;
   background-color: #0c0c1a;
-  min-height: 100vh;
   display: flex;
   flex-direction: row;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  align-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
   flex-wrap: wrap;
+  margin: 20px 0 0 auto;
 }
 
 .App-link {
@@ -29,9 +30,9 @@ body {
 
 .widget-title {
   text-align: left;
-  margin-top: 10px;
-  margin-left: 20px;
-  margin-bottom: 60px;
+  margin-left: 1rem;
+  margin-right: 2rem;
+  margin-bottom: 3rem;
 }
 
 .sub-widget-title {
@@ -44,8 +45,6 @@ body {
 
 .widget-container {
   margin: 10px;
-  width: 450px;
-  padding-bottom: 4rem;
   background-color: #14142b;
   border-radius: 15px;
 }

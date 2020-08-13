@@ -13,48 +13,44 @@ const solarE = new events.EventEmitter();
 const consumedE = new events.EventEmitter();
 app.use(express.static(Path.join(__dirname, "/../energymon/build")));
 app.ws("/ccin", (ws, req) => {
-  console.log("ccin");
   ws.on("message", (msg) => {
-    console.log("received ccin:" + msg);
-    let xml = msg;
-    xmltojs.parseString(xml, (err, res) => {
-      if (err) {
-        console.log("error parsing data");
-        console.log(xml);
-        ws.send("error parsing data");
-      } else {
-        let path = Path.resolve(__dirname, "readings/consumption.json");
-        if (
-          res !== null &&
-          res.msg !== undefined &&
-          res.msg.hasOwnProperty("hist")
-        ) {
-          // save or append to file
-          console.log("saving history file");
-          let histPath = Path.resolve(__dirname, "readings/history.json");
-          fs.appendFile(histPath, `${JSON.stringify(res)}\n`, (err) => {
-            if (err) {
-              console.log("Error appending file " + err);
-            }
-          });
-        } else {
-          fs.writeFile(path, JSON.stringify(res), (err) => {
-            if (err) {
-              console.log("error writing file " + err);
-            }
-          });
-          if (res !== null && res.msg !== undefined) {
-            const edata = {};
-            edata.time = res.msg.time[0];
-            edata.tmp = res.msg.tmprF[0];
-            edata.watts =
-              Number(res.msg.ch1[0].watts) + Number(res.msg.ch2[0].watts);
-            consumedE.emit("newData", edata);
+    console.log(`got msg ${msg}`);
+    xmltojs.parseStringPromise(msg).then(function (res) {
+      let path = Path.resolve(__dirname, "readings/consumption.json");
+      if (
+        res !== null &&
+        res.msg !== undefined &&
+        res.msg.hasOwnProperty("hist")
+      ) {
+        // save or append to file
+        //console.log("saving history file");
+        let histPath = Path.resolve(__dirname, "readings/history.json");
+        fs.appendFile(histPath, `${JSON.stringify(res)}\n`, (err) => {
+          if (err) {
+            console.log("Error appending file " + err);
           }
+        });
+      } else {
+        fs.writeFile(path, JSON.stringify(res), (err) => {
+          if (err) {
+            console.log("error writing file " + err);
+          }
+        });
+        if (res !== null && res.msg !== undefined) {
+          const edata = {};
+          edata.time = res.msg.time[0];
+          edata.tmp = res.msg.tmprF[0];
+          edata.watts =
+            Number(res.msg.ch1[0].watts) + Number(res.msg.ch2[0].watts);
+          consumedE.emit("newData", edata);
         }
-        ws.send("received payload");
       }
+      ws.send("received payload");
     });
+  }).catch(function (err) {
+    console.log("error parsing data");
+    console.log(msg);
+    console.log(err);
   });
 });
 
@@ -65,7 +61,7 @@ app.ws("/solar", (ws, req) => {
     solarE.on("data", (data) => {
       ws.send(JSON.stringify(data), (err, res) => {
         if (err) {
-          console.log("there was an error - solar");
+          console.log("there was an error - solar " + err);
         }
       });
     });
@@ -76,11 +72,13 @@ app.ws("/ccout", (ws, req) => {
   ws.on("message", (msg) => {
     console.log("ccout received from client: " + msg);
     consumedE.on("newData", (data) => {
+      if (data === null) {
+        return;
+      }
       let jsonData = JSON.stringify(data);
-      //console.log('send new data '+jsonData);
       ws.send(jsonData, (err, res) => {
         if (err) {
-          console.log("there was an error -- ccout");
+          console.log("there was an error -- ccout" + err);
         }
       });
     });
@@ -92,7 +90,7 @@ app.get("/", (req, res, next) => {
 });
 
 app.listen(port, () =>
-  console.log(`Energy Monitor (0.03) listening on port  ${port}`)
+  console.log(`Energy Monitor (1.0.3.2) listening on port  ${port}`)
 );
 
 setInterval(() => {
