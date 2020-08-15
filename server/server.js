@@ -15,42 +15,47 @@ app.use(express.static(Path.join(__dirname, "/../energymon/build")));
 app.ws("/ccin", (ws, req) => {
   ws.on("message", (msg) => {
     console.log(`got msg ${msg}`);
-    xmltojs.parseStringPromise(msg).then(function (res) {
-      let path = Path.resolve(__dirname, "readings/consumption.json");
-      if (
-        res !== null &&
-        res.msg !== undefined &&
-        res.msg.hasOwnProperty("hist")
-      ) {
-        // save or append to file
-        //console.log("saving history file");
-        let histPath = Path.resolve(__dirname, "readings/history.json");
-        fs.appendFile(histPath, `${JSON.stringify(res)}\n`, (err) => {
-          if (err) {
-            console.log("Error appending file " + err);
+    xmltojs
+      .parseStringPromise(msg)
+      .then(function (res) {
+        let path = Path.resolve(__dirname, "readings/consumption.json");
+        if (
+          res !== null &&
+          res.msg !== undefined &&
+          res.msg.hasOwnProperty("hist")
+        ) {
+          // save or append to file
+          //console.log("saving history file");
+          let histPath = Path.resolve(__dirname, "readings/history.json");
+          fs.appendFile(histPath, `${JSON.stringify(res)}\n`, (err) => {
+            if (err) {
+              console.log("Error appending file " + err);
+            }
+          });
+        } else {
+          fs.writeFile(path, JSON.stringify(res), (err) => {
+            if (err) {
+              console.log("error writing file " + err);
+            }
+          });
+          if (res !== null && res.msg !== undefined) {
+            const edata = {};
+            edata.time = res.msg.time[0];
+            edata.tmp = res.msg.tmprF[0];
+            edata.watts =
+              Number(res.msg.ch1[0].watts) + Number(res.msg.ch2[0].watts);
+            consumedE.emit("newData", edata);
           }
-        });
-      } else {
-        fs.writeFile(path, JSON.stringify(res), (err) => {
-          if (err) {
-            console.log("error writing file " + err);
-          }
-        });
-        if (res !== null && res.msg !== undefined) {
-          const edata = {};
-          edata.time = res.msg.time[0];
-          edata.tmp = res.msg.tmprF[0];
-          edata.watts =
-            Number(res.msg.ch1[0].watts) + Number(res.msg.ch2[0].watts);
-          consumedE.emit("newData", edata);
         }
-      }
-      ws.send("received payload");
-    });
-  }).catch(function (err) {
-    console.log("error parsing data");
-    console.log(msg);
-    console.log(err);
+        ws.send("received payload");
+      })
+      .catch(function (err) {
+        console.log("error parsing data");
+        console.log("errorered in:  " + msg);
+        //console.log("errorsote " + err);
+        ws.send("received bad payload");
+        consumedE.emit("newData", null);
+      });
   });
 });
 
@@ -73,15 +78,20 @@ app.ws("/ccout", (ws, req) => {
     console.log("ccout received from client: " + msg);
     consumedE.on("newData", (data) => {
       if (data === null) {
-        return;
+        console.log("error in data");
+        data = "";
       }
       let jsonData = JSON.stringify(data);
       ws.send(jsonData, (err, res) => {
         if (err) {
-          console.log("there was an error -- ccout" + err);
+          console.log("there was an error  --  ccout" + err);
         }
       });
     });
+  });
+
+  ws.on("close", (code) => {
+    console.log(`websocket server closed ${code}`);
   });
 });
 
