@@ -1,6 +1,10 @@
 ## Energy Monitor
 Energy monitor is an energy monitoring utility to monitor my solar panel production as well as my energy consumption.
 
+check it out at : 
+www.energy-dashboard.com
+
+
 The front end is created with the React library, using Websockets to communicate with an Express (Node.js) server.
 
 To monitor my Energy consumption I use the Current Cost ENV45 . The ENV 45 has a RJ 45 plug where I connected a Cat 5 cable and then proceed to cut the other side to reveal all the wires, To Connect it to the raspberry Pi I only need the data out, and the ground cable.
