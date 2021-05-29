@@ -27,7 +27,7 @@
     "react-chartjs-2": "^2.8.0",
     "react-dom": "^16.11.0",
     "react-hot-loader": "^4.12.16",
-    "ws": "^7.2.0",
+    "ws": "^7.4.6",
     "xml2js": "^0.4.22"
   },
   "devDependencies": {
